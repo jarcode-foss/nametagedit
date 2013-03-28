@@ -14,7 +14,7 @@ public class ScoreboardManager {
 	static List<Integer> list = new ArrayList<Integer>();
 	
 	@SuppressWarnings("unchecked")
-	public static void load() {
+	static void load() {
 		World mcWorld = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
 		for (String str : (String[]) mcWorld.getScoreboard().getTeamNames().toArray(new String[mcWorld.getScoreboard().getTeamNames().size()])) {
 			int entry = -1;
@@ -28,7 +28,7 @@ public class ScoreboardManager {
 		}
 	}
 	
-	public static void update(String player, String prefix, String suffix) {
+	static void update(String player, String prefix, String suffix) {
 		
 		World mcWorld = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
 		
@@ -42,7 +42,7 @@ public class ScoreboardManager {
 		mcWorld.getScoreboard().addPlayerToTeam(player, s);
 		
 	}
-	public static void overlap(String player, String prefix, String suffix) {
+	static void overlap(String player, String prefix, String suffix) {
 		
 		World mcWorld = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
 		
@@ -56,7 +56,7 @@ public class ScoreboardManager {
 		mcWorld.getScoreboard().addPlayerToTeam(player, s);
 		
 	}
-	public static void clear(String player) {
+	static void clear(String player) {
 		
 		World mcWorld = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
 		
@@ -68,7 +68,7 @@ public class ScoreboardManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static String getPrefix(String player, World mcWorld) {
+	static String getPrefix(String player, World mcWorld) {
 		for (ScoreboardTeam team : (ScoreboardTeam[]) mcWorld.getScoreboard().getTeams().toArray(new ScoreboardTeam[mcWorld.getScoreboard().getTeams().size()])) {
 			if (team.getPlayerNameSet().contains(player))
 				return team.getPrefix();
@@ -76,12 +76,24 @@ public class ScoreboardManager {
 		return "";
 	}
 	@SuppressWarnings("unchecked")
-	private static String getSuffix(String player, World mcWorld) {
+	static String getSuffix(String player, World mcWorld) {
 		for (ScoreboardTeam team : (ScoreboardTeam[]) mcWorld.getScoreboard().getTeams().toArray(new ScoreboardTeam[mcWorld.getScoreboard().getTeams().size()])) {
 			if (team.getPlayerNameSet().contains(player))
 				return team.getSuffix();
 		}
 		return "";
+	}
+	static String getSuffix(String player) {
+		World mcWorld = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
+		return getPrefix(player, mcWorld);
+	}
+	static String getPrefix(String player) {
+		World mcWorld = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
+		return getPrefix(player, mcWorld);
+	}
+	static String getFormattedName(String player) {
+		World mcWorld = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle();
+		return getPrefix(player, mcWorld) + player + getSuffix(player, mcWorld);
 	}
 	@SuppressWarnings("unchecked")
 	private static ScoreboardTeam getTeam(String player, World mcWorld) {

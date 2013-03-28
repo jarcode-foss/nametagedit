@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class GroupLoader {
-	
+public class ConfigLoader {
+
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	public static final boolean DEBUG = true;
 	
@@ -20,7 +20,7 @@ public class GroupLoader {
 		if (!folderFile.exists()) {
 			folderFile.mkdir();
 		}
-		String path = "plugins/" + plugin.getName() + "/groups.txt";
+		String path = "plugins/" + plugin.getName() + "/config.txt";
 		File source = new File(path);
 		if (source.exists()) {
 			return loadConfig(source);
@@ -42,36 +42,20 @@ public class GroupLoader {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		out.println("// This file declares custom permissions and ties prefixes and suffixes to them.");
-		out.println("// Players who possess these permissions will have the prefix and suffix assigned to the given permission.");
-		out.println("nametag.group.admin prefix = \"[&cAdmin&f] \"");
-		out.println("nametag.group.mod prefix = \"[&bMod&f] \"");
-		out.println("nametag.group.member prefix = \"[&eMember&f] \"");
-		out.println("nametag.group.swag prefix = \"&eThe &b\"");
-		out.println("nametag.group.swag suffix = \" &cSwagmaster\"");
-		
-		LinkedHashMap<String, LinkedHashMap<String, String>> map = new LinkedHashMap<String, LinkedHashMap<String, String>>();
-		
-		LinkedHashMap<String, String> admin = new LinkedHashMap<String, String>();
-		admin.put("prefix", "[&cAdmin&f] ");
-		map.put("nametag.group.admin", admin);
-		
-		LinkedHashMap<String, String> mod = new LinkedHashMap<String, String>();
-		mod.put("prefix", "[&bMod&f] ");
-		map.put("nametag.group.mod", mod);
-		
-		LinkedHashMap<String, String> member = new LinkedHashMap<String, String>();
-		member.put("prefix", "[&eMember&f] ");
-		map.put("nametag.group.member", member);
-		
-		LinkedHashMap<String, String> swag = new LinkedHashMap<String, String>();
-		swag.put("prefix", "&eThe &b");
-		swag.put("suffix", " &cSwagmaster");
-		map.put("nametag.group.swag", swag);
+		out.println("// This file contains several configurable properties for this plugin.");
+		out.println("// You may delete this file and reload the plugin / server to re-generate this file.");
+		out.println("");
+		out.println("// If enabled, this will remove any formatting created in the death messages by prefixes / suffixes");
+		out.println("// Do not set this to true if you already have a plugin that changes death messages");
+		out.println("death-message-mask enabled = false");
+		out.println("");
+		out.println("// If enabled, this will remove any formatting created in the tab list by prefixes / suffixes");
+		out.println("// Do not set this to true if you already have a plugin that changes the tab list");
+		out.println("tab-list-mask enabled = false");
 		
 		out.close();
 		
-		return map;
+		return loadConfig(target);
 	}
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> loadConfig(File source) {
 		Scanner in = null;
@@ -105,13 +89,8 @@ public class GroupLoader {
 					syntaxError = true;
 					break;
 				}
-				String rawValue = lineScanner.nextLine();
-				syntaxError = checkValue(rawValue);
-				if (syntaxError) {
-					print("Error in syntax, value not encased in quotation marks!");
-					break;
-				}
-				String value = getValue(rawValue);
+				String value = lineScanner.nextLine().trim();
+				printDebug("Value loaded: " + node + " " + operation + ", value: \"" + value + "\"");
 				
 				LinkedHashMap<String, String> entry = new LinkedHashMap<String,String>();
 				
@@ -152,25 +131,20 @@ public class GroupLoader {
 			return false;
 		else return true;
 	}
-	private static boolean checkValue(String rawValue) {
-		rawValue = rawValue.trim();
-		if (!rawValue.startsWith("\""))
-			return true;
-		if (!rawValue.endsWith("\""))
-			return true;
-		return false;
-		
-	}
-	private static String getValue(String rawValue) {
-		rawValue = rawValue.trim();
-		String f1 = "";
-		String f2 = "";
-		for (int t = 1; t < rawValue.length() - 1; t++) {
-			f1 += rawValue.charAt(t);
+	public static boolean parseBoolean(String name, String operation, LinkedHashMap<String, LinkedHashMap<String, String>> config, boolean d) {
+		if (config.containsKey(name) && config.get(name).containsKey(operation)) {
+			String value = config.get(name).get(operation);
+			if (value.equalsIgnoreCase("true")) {
+				return true;
+			}
+			else if (value.equalsIgnoreCase("false")) {
+				return false;
+			}
+			System.out.println("[NametagEdit] Could not parse boolean for \"" + name + " " + operation + "\" in config.txt, value given: " + value + ", defaulting to " + d);
 		}
-		for (int t = 0; t < f1.length() && t < 16; t++) {
-			f2 += f1.charAt(t);
+		else {
+			System.out.println("[NametagEdit] Value does not exist for \"" + name + " " + operation + "\" in config.txt, defaulting to " + d);
 		}
-		return f2;
+		return d;
 	}
 }

@@ -162,7 +162,7 @@ public class PlayerLoader {
 		
 		while (in.hasNext()) {
 			String line = in.nextLine();
-			if (!line.trim().startsWith("//")) {
+			if (!line.trim().startsWith("//") && !line.isEmpty()) {
 				
 				syntaxError = checkWords(line);
 				if (syntaxError) {
