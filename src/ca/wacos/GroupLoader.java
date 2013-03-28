@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class GroupLoader {
 	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	
 	public static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
 		String folder = "plugins/" + plugin.getName();

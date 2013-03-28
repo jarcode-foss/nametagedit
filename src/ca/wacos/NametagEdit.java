@@ -180,7 +180,6 @@ public class NametagEdit extends JavaPlugin implements Listener {
 	}
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		System.out.println(NametagEdit.deathMessageEnabled);
 		if (NametagEdit.deathMessageEnabled) {
 			String formattedName = ScoreboardManager.getFormattedName(e.getEntity().getName());
 			if (!formattedName.equals(e.getEntity().getName()))
