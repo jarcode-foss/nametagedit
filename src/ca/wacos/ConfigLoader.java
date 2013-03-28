@@ -11,6 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigLoader {
 	
+	// Test
+	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	public static final boolean DEBUG = false;
 	
