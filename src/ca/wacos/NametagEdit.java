@@ -241,7 +241,7 @@ public class NametagEdit extends JavaPlugin implements Listener {
 			}
 			if (args.length >= 2) {
 				String operation = args[0];
-				String text = getValue(getText(args));
+				String text = trim(getValue(getText(args)));
 				String target = args[1];
 
 				if (senderPlayer != null) {
@@ -350,13 +350,16 @@ public class NametagEdit extends JavaPlugin implements Listener {
 			else
 				rv += args[t] + " ";
 		}
-		if (rv.length() > 16) {
-			String rv2 = rv;
-			rv = "";
-			for (int t = 0; t < 16; t++)
-				rv += rv2.charAt(t);
-		}
 		return rv;
+	}
+	private String trim(String input) {
+		if (input.length() > 16) {
+			String temp = input;
+			input = "";
+			for (int t = 0; t < 16; t++)
+				input += temp.charAt(t);
+		}
+		return input;
 	}
 	private static String getValue(String rawValue) {
 		if (!(rawValue.startsWith("\"") && rawValue.endsWith("\""))) {

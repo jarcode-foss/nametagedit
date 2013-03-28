@@ -11,10 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ConfigLoader {
 	
-	// Test
-	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	
 	public static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
 		String folder = "plugins/" + plugin.getName();
@@ -166,9 +164,13 @@ public class ConfigLoader {
 	private static String getValue(String rawValue) {
 		rawValue = rawValue.trim();
 		String f1 = "";
+		String f2 = "";
 		for (int t = 1; t < rawValue.length() - 1; t++) {
 			f1 += rawValue.charAt(t);
 		}
-		return f1;
+		for (int t = 0; t < f1.length() && t < 16; t++) {
+			f2 += f1.charAt(t);
+		}
+		return f2;
 	}
 }
