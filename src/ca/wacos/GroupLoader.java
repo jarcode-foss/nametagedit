@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class ConfigLoader {
+public class GroupLoader {
 	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	public static final boolean DEBUG = true;

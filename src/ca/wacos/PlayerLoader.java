@@ -211,7 +211,7 @@ public class PlayerLoader {
 		System.out.println(PREFIX + p);
 	}
 	private static void printDebug(String p) {
-		if (ConfigLoader.DEBUG)
+		if (GroupLoader.DEBUG)
 			System.out.println(PREFIX + p);
 	}
 	private static boolean checkWords(String line) {

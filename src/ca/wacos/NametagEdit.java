@@ -35,11 +35,11 @@ public class NametagEdit extends JavaPlugin implements Listener {
 	public void onEnable() {
 		ScoreboardManager.load();
 		this.getServer().getPluginManager().registerEvents(this, this);
-		groups = ConfigLoader.load(this);
+		groups = GroupLoader.load(this);
 		loadPlayers();
 	}
 	public void loadPlayers() {
-		groups = ConfigLoader.load(this);
+		groups = GroupLoader.load(this);
 		LinkedHashMap<String, LinkedHashMap<String, String>> players = PlayerLoader.load(this);
 		Player[] onlinePlayers = Bukkit.getOnlinePlayers();
 		for (Player p : onlinePlayers) {
@@ -104,7 +104,7 @@ public class NametagEdit extends JavaPlugin implements Listener {
 				prefix = prefix.replace("&", "§");
 			if (suffix != null)
 				suffix = suffix.replace("&", "§");
-			if (ConfigLoader.DEBUG) {
+			if (GroupLoader.DEBUG) {
 				System.out.println("Setting prefix/suffix for " + e.getPlayer().getName() + ": " + prefix + ", " + suffix + " (user)");
 			}
 			ScoreboardManager.overlap(e.getPlayer().getName(), prefix, suffix);
@@ -120,7 +120,7 @@ public class NametagEdit extends JavaPlugin implements Listener {
 						prefix = prefix.replace("&", "§");
 					if (suffix != null)
 						suffix = suffix.replace("&", "§");
-					if (ConfigLoader.DEBUG) {
+					if (GroupLoader.DEBUG) {
 						System.out.println("Setting prefix/suffix for " + e.getPlayer().getName() + ": " + prefix + ", " + suffix + " (node)");
 					}
 					ScoreboardManager.overlap(e.getPlayer().getName(), prefix, suffix);
@@ -144,7 +144,7 @@ public class NametagEdit extends JavaPlugin implements Listener {
 
 			setOfflineLoc(e.getPlayer().getName(), Bukkit.getWorlds().get(0).getSpawnLocation());
 			
-			if (ConfigLoader.DEBUG) {
+			if (GroupLoader.DEBUG) {
 				System.out.println("Transfering player to main world temporarily to set nametags...");
 			}
 			backs.put(e.getPlayer().getName(), l);
@@ -169,7 +169,7 @@ public class NametagEdit extends JavaPlugin implements Listener {
 			float yaw = ((NBTTagFloat)list.get(0)).data;
 			float pitch = ((NBTTagFloat)list.get(1)).data;
 			
-			if (ConfigLoader.DEBUG)
+			if (GroupLoader.DEBUG)
 				System.out.println("Loaded location from player file: " + w.getName() + ", " + x + ", " + y + ", " + z + ", " + yaw + ", " + pitch);
 			
 			Location loc = new Location(w, x, y, z, yaw, pitch);
