@@ -1,1 +1,5 @@
-Just testing out GitHub for the first time, if you're reading this you've caught me at a bad time D:
+This is a Bukkit server plugin for craftbukkit 1.5+
+
+Add prefixes and suffixes to player's nametags above their heads, with formatting codes! This plugin dynamically creates teams with the Scoreboard features in 1.5 to assign unique prefixes and suffixes for specific players and groups.
+
+Anyone interested in using this plugin's classes, features, or just modifying the plugin for yourself may do so as long as I am given credit clearly.
