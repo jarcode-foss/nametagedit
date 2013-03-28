@@ -90,7 +90,6 @@ public class ConfigLoader {
 					break;
 				}
 				String value = lineScanner.nextLine().trim();
-				printDebug("Value loaded: " + node + " " + operation + ", value: \"" + value + "\"");
 				
 				LinkedHashMap<String, String> entry = new LinkedHashMap<String,String>();
 				
