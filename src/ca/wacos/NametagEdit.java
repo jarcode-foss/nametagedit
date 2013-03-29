@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.UUID;
@@ -38,13 +39,25 @@ public class NametagEdit extends JavaPlugin implements Listener {
 	static boolean tabListEnabled = false;
 	static boolean deathMessageEnabled = false;
 	
+	static NametagEdit plugin = null;
+	
 	public void onEnable() {
+		plugin = this;
 		ScoreboardManager.load();
 		this.getServer().getPluginManager().registerEvents(this, this);
 		groups = GroupLoader.load(this);
 		load();
 	}
 	public void load() {
+		
+		PluginVersion v = Updater.getVersion();
+		if (v.isSnapshot()) {
+			box(new String[] { "This is a development plugin build.",
+					"", "Downloading the latest stable version at",
+					"http://dev.bukkit.org/server-mods/nametagedit/", "is recommended.",
+					"", "Current build: SNAPSHOT " + v.getBuild()  + " v" + v.getVersion()}, "NametagEdit INFO");
+		}
+		
 		groups = GroupLoader.load(this);
 		
 		config = ConfigLoader.load(this);
@@ -100,6 +113,9 @@ public class NametagEdit extends JavaPlugin implements Listener {
 				p.setPlayerListName(p.getName());
 			}
 		}
+	}
+	File getPluginFile() {
+		return getFile();
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
@@ -421,5 +437,55 @@ public class NametagEdit extends JavaPlugin implements Listener {
 			}
 		}
 		return new String(array);
+	}
+
+	static void box(String [] paragraph, String title) {
+		
+		ArrayList<String> buffer = new ArrayList<String>();
+		String at = "";
+		
+		int side1 = (int) Math.round(25 - ((title.length() + 4) / 2d));
+		int side2 = (int) (26 - ((title.length() + 4) / 2d));
+		at += '+';
+		for (int t = 0; t < side1; t++)
+			at += '-';
+		at += "{ ";
+		at += title;
+		at += " }";
+		for (int t = 0; t < side2; t++)
+			at += '-';
+		at += '+';
+		buffer.add(at);
+		at = "";
+		buffer.add("|                                                   |");
+		for (String s : paragraph) {
+			at += "| ";
+			int left = 49;
+			for (int t = 0; t < s.length(); t++) {
+				at += s.charAt(t);
+				left--;
+				if (left == 0) {
+					at += " |";
+					buffer.add(at);
+					at = "";
+					at += "| ";
+					left = 49;
+				}
+			}
+			while (left-- > 0) {
+				at += ' ';
+			}
+			at += " |";
+			buffer.add(at);
+			at = "";
+		}
+		buffer.add("|                                                   |");
+		buffer.add("+---------------------------------------------------+");
+		
+		System.out.println(" ");
+		for (String line : buffer.toArray(new String[buffer.size()])) {
+			System.out.println(line);
+		}
+		System.out.println(" ");
 	}
 }
