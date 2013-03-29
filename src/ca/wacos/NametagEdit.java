@@ -30,8 +30,8 @@ public class NametagEdit extends JavaPlugin implements Listener {
 		PluginVersion v = Updater.getVersion();
 		if (v.isSnapshot()) {
 			NametagUtils.box(new String[] { "This is a development plugin build.",
-					"", "Downloading the latest stable version at",
-					"http://dev.bukkit.org/server-mods/nametagedit/", "is recommended.",
+					"", "Download the latest table version by",
+					"running '/ne update stable' in the server.",
 					"", "Current build: SNAPSHOT " + v.getBuild()  + " v" + v.getVersion()}, "NametagEdit INFO");
 		}
 		
