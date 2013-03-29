@@ -166,7 +166,7 @@ public class NametagCommand implements CommandExecutor {
 				}
 			}
 			else {
-				sender.sendMessage("§e§nNametagEdit command usage:");
+				sender.sendMessage("§e§nNametagEdit v" + NametagEdit.plugin.getDescription().getVersion() + " command usage:");
 				sender.sendMessage("");
 				sender.sendMessage("§a/ne prefix [player] [text]§e - sets a player's prefix");
 				sender.sendMessage("§a/ne suffix [player] [text]§e - sets a player's suffix");
@@ -196,6 +196,12 @@ public class NametagCommand implements CommandExecutor {
 		}
 		else {
 			name = "^";
+		}
+		for (String key : updateTasks.keySet().toArray(new String[updateTasks.keySet().size()])) {
+			if (key.equals(name)) {
+				while (updateTasks.remove(key) != null) {}
+				break;
+			}
 		}
 		if (Updater.checkForUpdates(dev, sender)) {
 			updateTasks.put(name, dev);
