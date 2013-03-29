@@ -136,6 +136,7 @@ public class GroupLoader {
 	private static void print(String p) {
 		System.out.println(PREFIX + p);
 	}
+	@SuppressWarnings("unused")
 	private static void printDebug(String p) {
 		if (DEBUG)
 			System.out.println(PREFIX + p);

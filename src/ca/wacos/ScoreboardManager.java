@@ -1,7 +1,6 @@
 package ca.wacos;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.minecraft.server.v1_5_R2.ScoreboardTeam;

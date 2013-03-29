@@ -210,6 +210,7 @@ public class PlayerLoader {
 	private static void print(String p) {
 		System.out.println(PREFIX + p);
 	}
+	@SuppressWarnings("unused")
 	private static void printDebug(String p) {
 		if (GroupLoader.DEBUG)
 			System.out.println(PREFIX + p);
