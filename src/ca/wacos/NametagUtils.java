@@ -177,6 +177,12 @@ public class NametagUtils {
 				at = "";
 			}
 		}
+		try {
+			oldValues.add(Integer.parseInt(at));
+		}
+		catch (Exception e) {
+			return false;
+		}
 		at = "";
 		for (char c : newer.toCharArray()) {
 			if (c != '.') {
@@ -191,6 +197,12 @@ public class NametagUtils {
 				}
 				at = "";
 			}
+		}
+		try {
+			newValues.add(Integer.parseInt(at));
+		}
+		catch (Exception e) {
+			return false;
 		}
 		int size = oldValues.size();
 		boolean defaultToOld = true;
