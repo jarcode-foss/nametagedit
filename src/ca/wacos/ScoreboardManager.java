@@ -242,7 +242,7 @@ public class ScoreboardManager {
 		return at;
 	}
 	/**
-	 * Removes any teams that do not that any players in them.
+	 * Removes any teams that do not have any players in them.
 	 * 
 	 * @param mcWorld the main world where the scoreboard.dat resides
 	 */
