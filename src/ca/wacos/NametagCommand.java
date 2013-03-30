@@ -224,8 +224,9 @@ public class NametagCommand implements CommandExecutor {
 						Bukkit.broadcast("[§aNametagEdit§f] §ePlugin is updating...", key);
 					}
 				}
+				boolean dev = updateTasks.get(key);
 				updateTasks.clear();
-				boolean result = Updater.downloadUpdate(sender, updateTasks.get(key));
+				Updater.downloadUpdate(sender, dev);
 				return true;
 			}
 		}
