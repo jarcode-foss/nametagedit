@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class NametagEdit extends JavaPlugin implements Listener {
+public class NametagEdit extends JavaPlugin {
 	
 	static LinkedHashMap<String, LinkedHashMap<String, String>> groups = null;
 	static LinkedHashMap<String, LinkedHashMap<String, String>> config = null;
@@ -21,7 +21,7 @@ public class NametagEdit extends JavaPlugin implements Listener {
 	public void onEnable() {
 		plugin = this;
 		ScoreboardManager.load();
-		this.getServer().getPluginManager().registerEvents(this, this);
+		this.getServer().getPluginManager().registerEvents(new NametagEventHandler(), this);
 		groups = GroupLoader.load(this);
 		load();
 		getCommand("ne").setExecutor(new NametagCommand());
