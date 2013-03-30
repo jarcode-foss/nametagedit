@@ -5,9 +5,14 @@ import java.util.LinkedHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * This is the main class for the NametagEdit server plugin.
+ * 
+ * @author Levi Webb
+ *
+ */
 public class NametagEdit extends JavaPlugin {
 	
 	static LinkedHashMap<String, LinkedHashMap<String, String>> groups = null;
@@ -18,14 +23,20 @@ public class NametagEdit extends JavaPlugin {
 	
 	static NametagEdit plugin = null;
 	
+	/**
+	 * Called when the plugin is loaded, registering command executors and event handlers, intializes the {@link ScoreboardManager} class, and loads plugin information.
+	 * @see #load()
+	 */
 	public void onEnable() {
 		plugin = this;
 		ScoreboardManager.load();
 		this.getServer().getPluginManager().registerEvents(new NametagEventHandler(), this);
-		groups = GroupLoader.load(this);
-		load();
 		getCommand("ne").setExecutor(new NametagCommand());
+		load();
 	}
+	/**
+	 * Loads groups, players, configurations, and refreshes information for in-game players.
+	 */
 	public void load() {
 		PluginVersion v = Updater.getVersion();
 		if (v.isSnapshot()) {

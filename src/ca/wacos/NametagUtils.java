@@ -17,8 +17,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+/**
+ * This class contains various tools for formatting strings, printing information, and saving information.
+ * 
+ * @author Levi Webb
+ *
+ */
 public class NametagUtils {
-
+	
+	/**
+	 * Replaces '&' symbols with '§' symbols when a formatting code follows it.
+	 * 
+	 * @param str the {@link String} to format
+	 * @return the formatted {@link String}
+	 */
 	static String formatColors(String str) {
 		
 		char[] chars = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
@@ -34,7 +46,14 @@ public class NametagUtils {
 		}
 		return new String(array);
 	}
-
+	
+	/**
+	 * A fancy formatting method for putting the given array of {@link String} objects into
+	 * a box, labelled by a title, which is printed out in the console.
+	 * 
+	 * @param paragraph  the array of {@link String} objects to print
+	 * @param title  the title of the box
+	 */
 	static void box(String [] paragraph, String title) {
 		
 		ArrayList<String> buffer = new ArrayList<String>();
@@ -68,9 +87,8 @@ public class NametagUtils {
 					left = 49;
 				}
 			}
-			while (left-- > 0) {
+			while (left-- > 0)
 				at += ' ';
-			}
 			at += " |";
 			buffer.add(at);
 			at = "";
@@ -84,6 +102,12 @@ public class NametagUtils {
 		}
 		System.out.println(" ");
 	}
+	/**
+	 * Trims off the end of the given {@link String} to make the lenth a maximum of 16 characters long.
+	 * 
+	 * @param input  the {@link String} to format.
+	 * @return  the formatted {@link String}
+	 */
 	static String trim(String input) {
 		if (input.length() > 16) {
 			String temp = input;
@@ -93,6 +117,12 @@ public class NametagUtils {
 		}
 		return input;
 	}
+	/**
+	 * Returns the {@link String} within the quotes if the given string is enclosed with quotation marks.
+	 * 
+	 * @param rawValue the {@link String} to format
+	 * @return the formatted {@link String}
+	 */
 	static String getValue(String rawValue) {
 		if (!(rawValue.startsWith("\"") && rawValue.endsWith("\""))) {
 			return rawValue;
@@ -104,6 +134,12 @@ public class NametagUtils {
 		}
 		return f1;
 	}
+	/**
+	 * Returns the {@link Location} of an offline player by extracting it from his/her data file.
+	 * 
+	 * @param s the player name
+	 * @return the {@link Location} of the player
+	 */
 	static Location getOfflineLoc(String s) {
 		File file = new File(Bukkit.getWorlds().get(0).getName() + "/players/" + s + ".dat");
 		if (!file.exists())
@@ -134,6 +170,12 @@ public class NametagUtils {
 			return null;
 		}
 	}
+	/**
+	 * Sets the {@link Location} of an offline player by compressing it into his/her data file.
+	 * 
+	 * @param s the player name
+	 * @param l the {@link Location} of the player
+	 */
 	static void setOfflineLoc(String s, Location l) {
 		File file = new File(Bukkit.getWorlds().get(0).getName() + "/players/" + s + ".dat");
 		if (!file.exists())
@@ -159,6 +201,15 @@ public class NametagUtils {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Compares a newer version {@link String} to an older one. If the newer version is more recent,
+	 * this this method returns true, and if not, this method will return false. If there is an
+	 * error parsing the version numbers, this method will return false.
+	 * 
+	 * @param old the original version string
+	 * @param newer the version string to compare this to; the <i>newer</i> string.
+	 * @return true if newer is a newer version, false if not.
+	 */
 	static boolean compareVersion(String old, String newer) {
 		ArrayList<Integer> oldValues = new ArrayList<Integer>();
 		ArrayList<Integer> newValues = new ArrayList<Integer>();

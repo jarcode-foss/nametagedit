@@ -12,10 +12,29 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+/**
+ * This class is responsible for handling various events in the server.
+ * 
+ * @author Levi Webb
+ *
+ */
 public class NametagEventHandler implements Listener {
 
-	HashMap<String, Location> backs = new HashMap<String, Location>();
+	private HashMap<String, Location> backs = new HashMap<String, Location>();
 	
+	/**
+	 * Called when a player joins the server. This event is set to <i>HIGHEST</i> priority to address a conflict
+	 * created with plugins that read player information in this event.<br><br>
+	 * 
+	 * This event updates nametag information, and the tab list (if enabled). This method also restores
+	 * information modified by the {@link #onPlayerLogin(PlayerLoginEvent)} event so that this plugin,
+	 * along with any others, can read player information as it was when the player last left the server.
+	 * The data is restored by grabbing location information from a {@link HashMap} that was put into it originally
+	 * by the login event, and setting the player location with it.
+	 * 
+	 * @param e  the {@link PlayerJoinEvent} associated with this listener.
+	 * @see #onPlayerLogin(PlayerLoginEvent)
+	 */
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(final PlayerJoinEvent e) {
 		
@@ -85,6 +104,19 @@ public class NametagEventHandler implements Listener {
 		}
 	}
 	
+	/**
+	 * Called when a player makes an attempt to log into the server.<br><br>
+	 * 
+	 * This event makes an edit to the <b>player .dat file</b> in the "players" folder in the main world save,
+	 * editing the player's location to be in the main world to properly assign nametag prefixes and suffixes
+	 * when the player joins the server.<br><br>
+	 * 
+	 * The original player location is stored in a {@link HashMap} as a {@link Location}, then is restored and
+	 * removed when the player joins into the server.
+	 * 
+	 * @param e  the {@link PlayerLoginEvent} associated with this listener.
+	 * @see #onPlayerJoin(PlayerJoinEvent)
+	 */
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent e) {
 		Location l = NametagUtils.getOfflineLoc(e.getPlayer().getName());
@@ -98,6 +130,12 @@ public class NametagEventHandler implements Listener {
 			backs.put(e.getPlayer().getName(), l);
 		}
 	}
+	/**
+	 * Called when a player dies in the server. If enabled, this plugin will parse through the death message
+	 * and remove any formatting created by the player's nametag.
+	 * 
+	 * @param e  the {@link PlayerDeathEvent} associated with this listener.
+	 */
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		if (NametagEdit.deathMessageEnabled) {

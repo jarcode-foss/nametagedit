@@ -10,12 +10,25 @@ import java.util.Scanner;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * This class is responsible for loading player information from plugins/players.txt
+ * 
+ * @author Levi Webb
+ *
+ */
 public class PlayerLoader {
 	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	private static String path = null;
 	
-	public static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
+	/**
+	 * Loads all players from the players.txt file, and returns a {@link LinkedHashMap} of all the players and their prefixes/suffixes.
+	 * 
+	 * @param plugin  the plugin that this is being loaded from
+	 * @return a {@link LinkedHashMap} with a {@link String} as the key (player names), and another {@link LinkedHashMap} as the value
+	 * with a {@link String} key (prefix/suffix) and a {@link String} value (text).
+	 */
+	static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
 		String folder = "plugins/" + plugin.getName();
 		File folderFile = new File(folder);
 		if (!folderFile.exists()) {
@@ -36,7 +49,14 @@ public class PlayerLoader {
 			return generateConfig(source, plugin);
 		}
 	}
-	public static void addPlayer(String name, String operation, String value) {
+	/**
+	 * Adds a player to the file, writes it, and saves it.
+	 * 
+	 * @param name the player name
+	 * @param operation the operation (either "prefix" or "suffix")
+	 * @param value the prefix/suffix text
+	 */
+	static void addPlayer(String name, String operation, String value) {
 		ArrayList<String> buffer = new ArrayList<String>();
 		File file = new File(path);
 		Scanner in = null;
@@ -63,7 +83,16 @@ public class PlayerLoader {
 		out.close();
 		
 	}
-	public static void update(String name, String prefix, String suffix) {
+	/**
+	 * Updates a player's information in the players.txt file, overwriting their previous entries if they exist.
+	 * If either <i>prefix</i> or <i>suffix</i> is set to null or is empty, data for that field will not be
+	 * changed.
+	 * 
+	 * @param name the name of the player
+	 * @param prefix the prefix text to set
+	 * @param suffix the suffix text to set
+	 */
+	static void update(String name, String prefix, String suffix) {
 		LinkedHashMap<String, String> player = getPlayer(name);
 		prefix = prefix.replace("§", "&");
 		suffix = suffix.replace("§", "&");
@@ -81,7 +110,13 @@ public class PlayerLoader {
 				addPlayer(name, "suffix", player.get("suffix"));
 		}
 	}
-	public static void removePlayer(String name, String operation) {
+	/**
+	 * Removes all traces of a player from the file, or a specific operation from a player.
+	 * 
+	 * @param name the player name
+	 * @param operation the operation (either "prefix" or "suffix")
+	 */
+	static void removePlayer(String name, String operation) {
 		ArrayList<String> buffer = new ArrayList<String>();
 		File file = new File(path);
 		Scanner in = null;
@@ -121,7 +156,14 @@ public class PlayerLoader {
 		}
 		out.close();
 	}
-	public static LinkedHashMap<String, String> getPlayer(String name) {
+	/**
+	 * Returns the {@link LinkedHashMap} for a given player, containing their prefix/suffix data. The key in
+	 * this {@link LinkedHashMap} is the operation type, and the value is the text.
+	 * 
+	 * @param name the player name
+	 * @return a {@link LinkedHashMap} of the player's data.
+	 */
+	static LinkedHashMap<String, String> getPlayer(String name) {
 		LinkedHashMap<String, LinkedHashMap<String, String>> playerMap = loadConfig();
 		for (String key : playerMap.keySet().toArray(new String[playerMap.keySet().size()])) {
 			if (key.equals(name)) {
@@ -130,6 +172,14 @@ public class PlayerLoader {
 		}
 		return null;
 	}
+	/**
+	 * Generates and loads the given file with default example configurations / data.
+	 * 
+	 * @param target the target {@link File}
+	 * @param plugin the plugin that this is being generated from
+	 * @return a {@link LinkedHashMap} with a {@link String} as the key (player names), and another {@link LinkedHashMap} as the value
+	 * with a {@link String} key (prefix/suffix) and a {@link String} value (text).
+	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> generateConfig(File target, JavaPlugin plugin) {
 		PrintWriter out = null;
 		try {
@@ -146,6 +196,12 @@ public class PlayerLoader {
 		
 		return loadConfig();
 	}
+	/**
+	 * Loads the file with default example configurations / data.
+	 * 
+	 * @return a {@link LinkedHashMap} with a {@link String} as the key (player names), and another {@link LinkedHashMap} as the value
+	 * with a {@link String} key (prefix/suffix) and a {@link String} value (text).
+	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> loadConfig() {
 		File source = new File(path);
 		Scanner in = null;
@@ -207,14 +263,28 @@ public class PlayerLoader {
 			return new LinkedHashMap<String, LinkedHashMap<String, String>>();
 		return map;
 	}
+	/**
+	 * Prints the given text with the prefix according to this object.
+	 * @param p  the text to print
+	 */
 	private static void print(String p) {
 		System.out.println(PREFIX + p);
 	}
+	/**
+	 * Prints the given text if debugging is enabled.
+	 * @param p  the text to print
+	 */
 	@SuppressWarnings("unused")
 	private static void printDebug(String p) {
 		if (GroupLoader.DEBUG)
 			System.out.println(PREFIX + p);
 	}
+	/**
+	 * Checks the given line and returns true if at least four elements exist in it, separated by spaces.
+	 * 
+	 * @param line  the line to check
+	 * @return true if four or more elements exist, false if not.
+	 */
 	private static boolean checkWords(String line) {
 		int count = 0;
 		Scanner reader = new Scanner(line);
@@ -227,6 +297,12 @@ public class PlayerLoader {
 			return false;
 		else return true;
 	}
+	/**
+	 * Checks the given line to see if it is enclosed in quotation marks.
+	 * 
+	 * @param line  the line to check
+	 * @return true if the line is enclosed in quotation marks, false if not.
+	 */
 	private static boolean checkValue(String rawValue) {
 		rawValue = rawValue.trim();
 		if (!rawValue.startsWith("\""))
@@ -236,6 +312,12 @@ public class PlayerLoader {
 		return false;
 		
 	}
+	/**
+	 * Removes the first and last character of a string, then cuts off any excess data at the end to keep a maximum length of 16.
+	 * 
+	 * @param rawValue  the string to edit
+	 * @return the  modified string
+	 */
 	private static String getValue(String rawValue) {
 		rawValue = rawValue.trim();
 		String f1 = "";

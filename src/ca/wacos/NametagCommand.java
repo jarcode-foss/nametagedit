@@ -8,10 +8,25 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * This class is responsible for handling the /ne command.
+ * 
+ * @author Levi Webb
+ *
+ */
 public class NametagCommand implements CommandExecutor {
 
 	HashMap<String, Boolean> updateTasks = new HashMap<String, Boolean>();
 	
+	/**
+	 * onCommand method for the plugin.
+	 * 
+	 * @param sender the command sender
+	 * @param cmd the executed command
+	 * @param label the command label
+	 * @param args an array of {@link String} objects for the command arguments
+	 * @see #CommandExecutor
+	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player senderPlayer = null;
 		if (sender instanceof Player) {
@@ -179,6 +194,12 @@ public class NametagCommand implements CommandExecutor {
 		}
 		return true;
 	}
+	/**
+	 * Combines the given array of {@link String} objects into a single (@link String}
+	 * 
+	 * @param args  the (@link String} array to combine
+	 * @return  the combined string
+	 */
 	private String getText(String[] args) {
 		String rv = "";
 		for (int t = 2; t < args.length; t++) {
@@ -189,6 +210,14 @@ public class NametagCommand implements CommandExecutor {
 		}
 		return rv;
 	}
+	/**
+	 * Executes an update check from the given {@link CommandSender} and if an update exists, add a task to the current list of update tasks.
+	 * 
+	 * @param sender the {@link CommandSender} to execute from
+	 * @param dev whether or not to check for a snapshot / development build
+	 * @return true
+	 * @see Updater#checkForUpdates(CommandSender, boolean)
+	 */
 	private boolean update(CommandSender sender, boolean dev) {
 		String name;
 		if (sender instanceof Player) {
@@ -208,6 +237,13 @@ public class NametagCommand implements CommandExecutor {
 		}
 		return true;
 	}
+	/**
+	 * Triggers a plugin update if the given {@link CommandSender} has created an update task previously by calling {@link #update(CommandSender, boolean)}
+	 * 
+	 * @param sender the {@link CommandSender} to execute from
+	 * @return true
+	 * @see Updater#downloadUpdate(CommandSender, boolean)
+	 */
 	private boolean download(CommandSender sender) {
 
 		String name;

@@ -23,7 +23,19 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 
+/**
+ * This class checks for updates, downloads them, installs them, and reloads the plugin, as well as getting current plugin information.
+ * 
+ * @author Levi Webb
+ *
+ */
+
 public class Updater {
+	/**
+	 * Retrieves the current {@link PluginVersion} for this plugin.
+	 * 
+	 * @return the {@link PluginVersion} representing this plugin's version.
+	 */
 	public static PluginVersion getVersion() {
 		String ver = NametagEdit.plugin.getDescription().getVersion();
 		int build = extractSnapshotFile();
@@ -34,6 +46,11 @@ public class Updater {
 			return new PluginVersion(ver, build);
 		}
 	}
+	/**
+	 * Extracts and reads the snapshot.txt file from the plugin .jar if it exists, and prints out the build number if it can be read.
+	 * 
+	 * @return the build number, and -1 if the file does not exist or could not be loaded.
+	 */
 	private static int extractSnapshotFile() {
 		String pluginPath = "plugins/" + NametagEdit.plugin.getPluginFile().getName();
 		FileInputStream file = null;
@@ -90,6 +107,14 @@ public class Updater {
 		}
 		return -1;
 	}
+	/**
+	 * Makes a connection to a website to download version information for latest stable/development builds.
+	 * The assigned {@link CommandSender} will have update information printed to it.
+	 * 
+	 * @param dev set to true to check for a development build, false to check for a stable build
+	 * @param player the {@link CommandSender} who is executing this task.
+	 * @return true if there is an update, false if not.
+	 */
 	static boolean checkForUpdates(boolean dev, CommandSender player) {
 		try {
 			String file;
@@ -199,6 +224,14 @@ public class Updater {
 		}
 		return false;
 	}
+	/**
+	 * Makes a connection to a website to download version information for latest stable builds.
+	 * The assigned {@link CommandSender} will have update information printed to it only
+	 * if a newer version is found or if there was an error.
+	 * 
+	 * @param player the {@link CommandSender} who is executing this task.
+	 * @return true if there is an update, false if not.
+	 */
 	static boolean checkForUpdates(CommandSender player) {
 		try {
 			String file = "version.txt";
@@ -241,6 +274,15 @@ public class Updater {
 		}
 		return false;
 	}
+	/**
+	 * Initiates the download and installation process of a new plugin build. This disables
+	 * and enables the plugin after the download, so writing any code after running this
+	 * method will likely not be executed.
+	 * 
+	 * @param dev set to true to download a development build, false to download a stable build
+	 * @param player the {@link CommandSender} who is executing this task.
+	 * @return true if the update was successful, false if not.
+	 */
 	@SuppressWarnings("unchecked")
 	static boolean downloadUpdate(CommandSender player, boolean dev) {
 		boolean success = false;

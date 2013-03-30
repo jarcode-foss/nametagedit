@@ -9,12 +9,24 @@ import java.util.Scanner;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * This class is responsible for loading group information from plugins/groups.txt
+ * 
+ * @author Levi Webb
+ *
+ */
 public class GroupLoader {
 	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
-	public static final boolean DEBUG = false;
+	static final boolean DEBUG = false;
 	
-	public static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
+	/**
+	 * Loads the groups.txt from the plugin folder, returning a {@link LinkedHashMap} containing all the groups, which is blank if the groups failed to load.
+	 * 
+	 * @param plugin  the plugin instance
+	 * @return  a {@link LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
+	 */
+	static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
 		String folder = "plugins/" + plugin.getName();
 		File folderFile = new File(folder);
 		if (!folderFile.exists()) {
@@ -35,6 +47,14 @@ public class GroupLoader {
 			return generateConfig(source);
 		}
 	}
+	/**
+	 * Generates a new groups file,  then returns some predefined configuration data in a {@link LinkedHashMap}.
+	 * 
+	 * @param target  the target file to generate.
+	 * @return  a {@link LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
+	 * @see #loadConfig(File)
+	 * @see #load(JavaPlugin)
+	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> generateConfig(File target) {
 		PrintWriter out = null;
 		try {
@@ -73,7 +93,13 @@ public class GroupLoader {
 		
 		return map;
 	}
-	private static LinkedHashMap<String, LinkedHashMap<String, String>> loadConfig(File source) {
+	/**
+	 * Loads the specified groups file and returns the {@link LinkedHashMap} with all the groups data.
+	 * 
+	 * @param source  the target file to load.
+	 * @return  a {@link LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
+	 */
+	static LinkedHashMap<String, LinkedHashMap<String, String>> loadConfig(File source) {
 		Scanner in = null;
 		try {
 			in = new Scanner(source);
@@ -134,14 +160,28 @@ public class GroupLoader {
 		}
 		return map;
 	}
+	/**
+	 * Prints the given text with the prefix according to this object.
+	 * @param p  the text to print
+	 */
 	private static void print(String p) {
 		System.out.println(PREFIX + p);
 	}
+	/**
+	 * Prints the given text if debugging is enabled.
+	 * @param p  the text to print
+	 */
 	@SuppressWarnings("unused")
 	private static void printDebug(String p) {
 		if (DEBUG)
 			System.out.println(PREFIX + p);
 	}
+	/**
+	 * Checks the given line and returns true if at least four elements exist in it, separated by spaces.
+	 * 
+	 * @param line  the line to check
+	 * @return true if four or more elements exist, false if not.
+	 */
 	private static boolean checkWords(String line) {
 		int count = 0;
 		Scanner reader = new Scanner(line);
@@ -154,6 +194,12 @@ public class GroupLoader {
 			return false;
 		else return true;
 	}
+	/**
+	 * Checks the given line to see if it is enclosed in quotation marks.
+	 * 
+	 * @param line  the line to check
+	 * @return true if the line is enclosed in quotation marks, false if not.
+	 */
 	private static boolean checkValue(String rawValue) {
 		rawValue = rawValue.trim();
 		if (!rawValue.startsWith("\""))
@@ -163,6 +209,12 @@ public class GroupLoader {
 		return false;
 		
 	}
+	/**
+	 * Removes the first and last character of a string, then cuts off any excess data at the end to keep a maximum length of 16.
+	 * 
+	 * @param rawValue  the string to edit
+	 * @return the  modified string
+	 */
 	private static String getValue(String rawValue) {
 		rawValue = rawValue.trim();
 		String f1 = "";

@@ -9,11 +9,23 @@ import java.util.Scanner;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * This class is responsible for loading plugin configurations from plugins/players.txt
+ * 
+ * @author Levi Webb
+ *
+ */
 public class ConfigLoader {
 
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	
-	public static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
+	/**
+	 * Loads the config.txt from the plugin folder, returning a {@link LinkedHashMap} containing all the configuration info, which is blank if the configuration failed to load.
+	 * 
+	 * @param plugin  the plugin instance
+	 * @return  a {@link LinkedHashMap} of configurations, with a {@link String} key, and another {@link LinkedHashMap} as the value, containing both the operation and the actual configuration value.
+	 */
+	static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
 		String folder = "plugins/" + plugin.getName();
 		File folderFile = new File(folder);
 		if (!folderFile.exists()) {
@@ -34,6 +46,14 @@ public class ConfigLoader {
 			return generateConfig(source);
 		}
 	}
+	/**
+	 * Generates a new config file, loads it, then returns the {@link LinkedHashMap} with all the configuration data.
+	 * 
+	 * @param target  the target file to generate and load.
+	 * @return  a {@link LinkedHashMap} of configurations, with a {@link String} key, and another {@link LinkedHashMap} as the value, containing both the operation and the actual configuration value.
+	 * @see #loadConfig(File)
+	 * @see #load(JavaPlugin)
+	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> generateConfig(File target) {
 		PrintWriter out = null;
 		try {
@@ -56,6 +76,12 @@ public class ConfigLoader {
 		
 		return loadConfig(target);
 	}
+	/**
+	 * Loads the specified config file and returns the {@link LinkedHashMap} with all the configuration data.
+	 * 
+	 * @param source  the target file to load.
+	 * @return  a {@link LinkedHashMap} of configurations, with a {@link String} key, and another {@link LinkedHashMap} as the value, containing both the operation and the actual configuration value.
+	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> loadConfig(File source) {
 		Scanner in = null;
 		try {
@@ -110,14 +136,28 @@ public class ConfigLoader {
 			return new LinkedHashMap<String, LinkedHashMap<String, String>>();
 		return map;
 	}
+	/**
+	 * Prints the given text with the prefix according to this object.
+	 * @param p  the text to print
+	 */
 	private static void print(String p) {
 		System.out.println(PREFIX + p);
 	}
+	/**
+	 * Prints the given text if debugging is enabled.
+	 * @param p  the text to print
+	 */
 	@SuppressWarnings("unused")
 	private static void printDebug(String p) {
 		if (GroupLoader.DEBUG)
 			System.out.println(PREFIX + p);
 	}
+	/**
+	 * Checks the given line and returns true if at least four elements exist in it, separated by spaces.
+	 * 
+	 * @param line  the line to check
+	 * @return true if four or more elements exist, false if not.
+	 */
 	private static boolean checkWords(String line) {
 		int count = 0;
 		Scanner reader = new Scanner(line);
@@ -130,7 +170,16 @@ public class ConfigLoader {
 			return false;
 		else return true;
 	}
-	public static boolean parseBoolean(String name, String operation, LinkedHashMap<String, LinkedHashMap<String, String>> config, boolean d) {
+	/**
+	 * Parses the given config data for a specific configuration and operation, then makes an attempt to parse to retrieved value as a boolean.
+	 * 
+	 * @param name  the configuration name
+	 * @param operation  the configuration operation
+	 * @param config the configuration data
+	 * @param d the default value to return if an error occurs.
+	 * @return true if the found value equals "true", false if it equals "false", and <i>d</i> if the value could not be found or parsed.
+	 */
+	static boolean parseBoolean(String name, String operation, LinkedHashMap<String, LinkedHashMap<String, String>> config, boolean d) {
 		if (config.containsKey(name) && config.get(name).containsKey(operation)) {
 			String value = config.get(name).get(operation);
 			if (value.equalsIgnoreCase("true")) {
