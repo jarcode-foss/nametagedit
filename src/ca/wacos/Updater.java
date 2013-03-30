@@ -199,6 +199,48 @@ public class Updater {
 		}
 		return false;
 	}
+	static boolean checkForUpdates(CommandSender player) {
+		try {
+			String file = "version.txt";
+			String buildString;
+			String base = "http://wacos.ca/plugins/NametagEdit/";
+			URL site = new URL(base + file);
+			Scanner read = new Scanner(site.openStream());
+			if (read.hasNext())
+				read.next();
+			else {
+				player.sendMessage("");
+				player.sendMessage("§4NametagEdit failed to check for updates!");
+				player.sendMessage("§cCheck the console for more information.");
+				System.out.println("Could not read " + file + " from " + base + ", incorrect formatting!");
+				read.close();
+				return false;
+			}
+			if (read.hasNext())
+				buildString = read.next();
+			else {
+				player.sendMessage("");
+				player.sendMessage("§4NametagEdit failed to check for updates!");
+				player.sendMessage("§cCheck the console for more information.");
+				System.out.println("Could not read " + file + " from " + base + ", incorrect formatting!");
+				read.close();
+				return false;
+			}
+			read.close();
+			if (NametagUtils.compareVersion(NametagEdit.plugin.getDescription().getVersion(), buildString)) {
+				player.sendMessage("");
+				player.sendMessage("§aA new update is availible for NametagEdit: §fVersion " + buildString);
+				player.sendMessage("§aType §e/ne update stable.§a to update!");
+				return true;
+			}
+		} catch (Exception e) {
+			player.sendMessage("");
+			player.sendMessage("§4NametagEdit failed to check for updates: §c" + e.toString());
+			player.sendMessage("§cCheck the console for more information.");
+			e.printStackTrace();
+		}
+		return false;
+	}
 	@SuppressWarnings("unchecked")
 	static boolean downloadUpdate(CommandSender player, boolean dev) {
 		boolean success = false;
