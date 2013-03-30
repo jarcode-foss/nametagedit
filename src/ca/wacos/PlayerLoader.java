@@ -204,7 +204,7 @@ public class PlayerLoader {
 		in.close();
 		
 		if (syntaxError)
-			return null;
+			return new LinkedHashMap<String, LinkedHashMap<String, String>>();
 		return map;
 	}
 	private static void print(String p) {

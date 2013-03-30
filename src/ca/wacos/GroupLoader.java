@@ -129,8 +129,9 @@ public class GroupLoader {
 		}
 		in.close();
 		
-		if (syntaxError)
-			return null;
+		if (syntaxError) {
+			return new LinkedHashMap<String, LinkedHashMap<String, String>>();
+		}
 		return map;
 	}
 	private static void print(String p) {
