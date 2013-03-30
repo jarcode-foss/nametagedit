@@ -230,7 +230,7 @@ public class Updater {
 			if (NametagUtils.compareVersion(NametagEdit.plugin.getDescription().getVersion(), buildString)) {
 				player.sendMessage("");
 				player.sendMessage("§aA new update is availible for NametagEdit: §fVersion " + buildString);
-				player.sendMessage("§aType §e/ne update stable.§a to update!");
+				player.sendMessage("§aType §e/ne update stable §a to update!");
 				return true;
 			}
 		} catch (Exception e) {
