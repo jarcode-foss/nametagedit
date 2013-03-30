@@ -219,16 +219,13 @@ public class NametagCommand implements CommandExecutor {
 		}
 		for (String key : updateTasks.keySet().toArray(new String[updateTasks.keySet().size()])) {
 			if (key.equals(name)) {
-				boolean result = Updater.downloadUpdate(sender, updateTasks.get(key));
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					if (p.isOp()) {
-						if (result)
-							Bukkit.broadcast("[§aNametagEdit§f] §ePlugin updated!", key);
-						else
-							Bukkit.broadcast("[§aNametagEdit§f] §cPlugin failed to update", key);
+						Bukkit.broadcast("[§aNametagEdit§f] §ePlugin is updating...", key);
 					}
 				}
 				updateTasks.clear();
+				boolean result = Updater.downloadUpdate(sender, updateTasks.get(key));
 				return true;
 			}
 		}
