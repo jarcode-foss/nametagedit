@@ -221,7 +221,7 @@ public class NametagCommand implements CommandExecutor {
 			if (key.equals(name)) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					if (p.isOp()) {
-						Bukkit.broadcast("[§aNametagEdit§f] §ePlugin is updating...", key);
+						p.sendMessage("[§aNametagEdit§f] §ePlugin is updating...");
 					}
 				}
 				boolean dev = updateTasks.get(key);

@@ -78,6 +78,10 @@ public class NametagEventHandler implements Listener {
 				tab += str.charAt(t);
 			e.getPlayer().setPlayerListName(tab);
 		}
+		
+		if (e.getPlayer().isOp()) {
+			Updater.checkForUpdates(e.getPlayer());
+		}
 	}
 	
 	@EventHandler
