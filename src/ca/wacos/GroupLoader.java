@@ -18,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class GroupLoader {
 	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
-	static final boolean DEBUG = false;
+	static final boolean DEBUG = true;
 	
 	/**
 	 * Loads the groups.txt from the plugin folder, returning a {@link LinkedHashMap} containing all the groups, which is blank if the groups failed to load.

@@ -7,15 +7,12 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import net.minecraft.server.v1_5_R3.NBTCompressedStreamTools;
-import net.minecraft.server.v1_5_R3.NBTTagCompound;
-import net.minecraft.server.v1_5_R3.NBTTagDouble;
-import net.minecraft.server.v1_5_R3.NBTTagFloat;
-import net.minecraft.server.v1_5_R3.NBTTagList;
+import net.minecraft.server.v1_5_R3.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 
 /**
  * This class contains various tools for formatting strings, printing information, and saving information.
@@ -275,4 +272,12 @@ public class NametagUtils {
 			return true;
 		else return false;
 	}
+
+    /**
+     * Clears out any teams in the vanilla scoreboard object.
+     */
+    public static void clearOldTeams() {
+        Scoreboard board = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getScoreboard();
+        board.getTeams().clear();
+    }
 }

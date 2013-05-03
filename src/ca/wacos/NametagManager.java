@@ -401,4 +401,14 @@ public class NametagManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Clears out all teams and removes them for all the players. Called when the plugin is disabled.
+     */
+    public static void reset() {
+        for (TeamInfo team : getTeams()) {
+            sendPacketsRemoveTeam(team);
+        }
+        teams.clear();
+    }
 }
