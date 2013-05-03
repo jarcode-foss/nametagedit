@@ -7,11 +7,11 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import net.minecraft.server.v1_5_R2.NBTCompressedStreamTools;
-import net.minecraft.server.v1_5_R2.NBTTagCompound;
-import net.minecraft.server.v1_5_R2.NBTTagDouble;
-import net.minecraft.server.v1_5_R2.NBTTagFloat;
-import net.minecraft.server.v1_5_R2.NBTTagList;
+import net.minecraft.server.v1_5_R3.NBTCompressedStreamTools;
+import net.minecraft.server.v1_5_R3.NBTTagCompound;
+import net.minecraft.server.v1_5_R3.NBTTagDouble;
+import net.minecraft.server.v1_5_R3.NBTTagFloat;
+import net.minecraft.server.v1_5_R3.NBTTagList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

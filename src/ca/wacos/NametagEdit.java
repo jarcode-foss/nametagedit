@@ -24,12 +24,12 @@ public class NametagEdit extends JavaPlugin {
 	static NametagEdit plugin = null;
 	
 	/**
-	 * Called when the plugin is loaded, registering command executors and event handlers, intializes the {@link ScoreboardManager} class, and loads plugin information.
+	 * Called when the plugin is loaded, registering command executors and event handlers, intializes the {@link NametagManager} class, and loads plugin information.
 	 * @see #load()
 	 */
 	public void onEnable() {
 		plugin = this;
-		ScoreboardManager.load();
+        NametagManager.load();
 		this.getServer().getPluginManager().registerEvents(new NametagEventHandler(), this);
 		getCommand("ne").setExecutor(new NametagCommand());
 		load();
@@ -56,8 +56,8 @@ public class NametagEdit extends JavaPlugin {
 		LinkedHashMap<String, LinkedHashMap<String, String>> players = PlayerLoader.load(this);
 		Player[] onlinePlayers = Bukkit.getOnlinePlayers();
 		for (Player p : onlinePlayers) {
-			
-			ScoreboardManager.clear(p.getName());
+
+            NametagManager.clear(p.getName());
 			
 			boolean setGroup = true;
 			
@@ -70,7 +70,7 @@ public class NametagEdit extends JavaPlugin {
 						prefix = NametagUtils.formatColors(prefix);
 					if (suffix != null)
 						suffix = NametagUtils.formatColors(suffix);
-					ScoreboardManager.overlap(p.getName(), prefix, suffix);
+                    NametagManager.overlap(p.getName(), prefix, suffix);
 					
 					setGroup = false;
 				}
@@ -84,7 +84,7 @@ public class NametagEdit extends JavaPlugin {
 							prefix = NametagUtils.formatColors(prefix);
 						if (suffix != null)
 							suffix = NametagUtils.formatColors(suffix);
-						ScoreboardManager.overlap(p.getName(), prefix, suffix);
+                        NametagManager.overlap(p.getName(), prefix, suffix);
 						
 						break;
 					}

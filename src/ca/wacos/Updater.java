@@ -22,6 +22,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * This class checks for updates, downloads them, installs them, and reloads the plugin, as well as getting current plugin information.
@@ -108,123 +112,6 @@ public class Updater {
 		return -1;
 	}
 	/**
-	 * Makes a connection to a website to download version information for latest stable/development builds.
-	 * The assigned {@link CommandSender} will have update information printed to it.
-	 * 
-	 * @param dev set to true to check for a development build, false to check for a stable build
-	 * @param player the {@link CommandSender} who is executing this task.
-	 * @return true if there is an update, false if not.
-	 */
-	static boolean checkForUpdates(boolean dev, CommandSender player) {
-		try {
-			String file;
-			String buildString;
-			int build = -1;
-			String base = "http://wacos.ca/plugins/NametagEdit/";
-			if (dev) {
-				file = "snapshot.txt";
-			}
-			else {
-				file = "version.txt";
-			}
-			URL site = new URL(base + file);
-			Scanner read = new Scanner(site.openStream());
-			if (read.hasNext())
-				read.next();
-			else {
-				player.sendMessage("");
-				player.sendMessage("§4Failed to check for updates!");
-				player.sendMessage("§cCheck the console for more information.");
-				System.out.println("Could not read " + file + " from " + base + ", incorrect formatting!");
-				read.close();
-				return false;
-			}
-			if (read.hasNext())
-				buildString = read.next();
-			else {
-				player.sendMessage("");
-				player.sendMessage("§4Failed to check for updates!");
-				player.sendMessage("§cCheck the console for more information.");
-				System.out.println("Could not read " + file + " from " + base + ", incorrect formatting!");
-				read.close();
-				return false;
-			}
-			if (dev) {
-				try {
-					build = Integer.parseInt(buildString);
-				}
-				catch (Exception e) {
-					player.sendMessage("");
-					player.sendMessage("§4Failed to check for updates!");
-					player.sendMessage("§cCheck the console for more information.");
-					System.out.println("Could not read " + file + " from " + base + ", could not parse version number: " + buildString);
-					read.close();
-					return false;
-				}
-			}
-			read.close();
-			PluginVersion v = getVersion();
-			if (dev) {
-				if (v.isSnapshot()) {
-					if (v.getBuild() >= build) {
-						player.sendMessage("");
-						player.sendMessage("§eNo development build updates are availible.");
-						return false;
-					}
-					else {
-						player.sendMessage("");
-						player.sendMessage("§aA new snapshot is availible: §fSNAPSHOT " + build);
-						player.sendMessage("§eYou are running version: §f" + v.getVersion() + " SNAPSHOT " + v.getBuild());
-						player.sendMessage("§aWould you like to download and install it now?");
-						player.sendMessage("§aType §e/ne confirm§a to confirm.");
-						return true;
-					}
-				}
-				else {
-					player.sendMessage("");
-					player.sendMessage("§aA snapshot is availible: §fSNAPSHOT " + build);
-					player.sendMessage("§eYou are running version §f" + v.getVersion() + " (stable)");
-					player.sendMessage("§aWould you like to download and install it now?");
-					player.sendMessage("§aType §e/ne confirm§a to confirm.");
-					return true;
-				}
-			}
-			else {
-				if (NametagUtils.compareVersion(v.getVersion(), buildString)) {
-					player.sendMessage("");
-					player.sendMessage("§aA new update is availible: §fVersion " + buildString);
-					if (v.isSnapshot())
-						player.sendMessage("§eYou are running version: §f" + v.getVersion() + " SNAPSHOT " + v.getBuild());
-					else
-						player.sendMessage("§eYou are running version: §f" + v.getVersion() + " (stable)");
-					player.sendMessage("§aWould you like to download and install it now?");
-					player.sendMessage("§aType §e/ne confirm§a to confirm.");
-					return true;
-				}
-				else if (v.isSnapshot()){
-					player.sendMessage("");
-					player.sendMessage("§aAn update is availible, but it not newer than this version (§f" + buildString + "§a)");
-					player.sendMessage("§eYou are running version: §f" + v.getVersion() + " SNAPSHOT " + v.getBuild());
-					player.sendMessage("§aYou may downgrade from this development snapshot to the latest stable build.");
-					player.sendMessage("§aWould you like to download and install it now?");
-					player.sendMessage("§aType §e/ne confirm§a to confirm.");
-					return true;
-				}
-				else {
-					player.sendMessage("");
-					player.sendMessage("§eNo new updates found, plugin is up to date.");
-					return false;
-				}
-			}
-		} catch (Exception e) {
-			player.sendMessage("");
-			player.sendMessage("§4Failed to check for updates: §c" + e.toString());
-			player.sendMessage("§cCheck the console for more information.");
-			e.printStackTrace();
-		}
-		return false;
-	}
-	/**
 	 * Makes a connection to a website to download version information for latest stable builds.
 	 * The assigned {@link CommandSender} will have update information printed to it only
 	 * if a newer version is found or if there was an error.
@@ -234,36 +121,14 @@ public class Updater {
 	 */
 	static boolean checkForUpdates(CommandSender player) {
 		try {
-			String file = "version.txt";
-			String buildString;
-			String base = "http://wacos.ca/plugins/NametagEdit/";
-			URL site = new URL(base + file);
-			Scanner read = new Scanner(site.openStream());
-			if (read.hasNext())
-				read.next();
-			else {
-				player.sendMessage("");
-				player.sendMessage("§4NametagEdit failed to check for updates!");
-				player.sendMessage("§cCheck the console for more information.");
-				System.out.println("Could not read " + file + " from " + base + ", incorrect formatting!");
-				read.close();
-				return false;
-			}
-			if (read.hasNext())
-				buildString = read.next();
-			else {
-				player.sendMessage("");
-				player.sendMessage("§4NametagEdit failed to check for updates!");
-				player.sendMessage("§cCheck the console for more information.");
-				System.out.println("Could not read " + file + " from " + base + ", incorrect formatting!");
-				read.close();
-				return false;
-			}
-			read.close();
+            String buildString;
+
+            buildString = getLatestVersion(player);
+
 			if (NametagUtils.compareVersion(NametagEdit.plugin.getDescription().getVersion(), buildString)) {
 				player.sendMessage("");
 				player.sendMessage("§aA new update is availible for NametagEdit: §fVersion " + buildString);
-				player.sendMessage("§aType §e/ne update stable §a to update!");
+				player.sendMessage("§aType §e/ne update §a to update!");
 				return true;
 			}
 		} catch (Exception e) {
@@ -274,35 +139,124 @@ public class Updater {
 		}
 		return false;
 	}
+    static boolean manuallyCheckForUpdates(CommandSender player) {
+        try {
+            String buildString;
+            PluginVersion v = getVersion();
+
+            buildString = getLatestVersion(player);
+
+            if (NametagUtils.compareVersion(NametagEdit.plugin.getDescription().getVersion(), buildString)) {
+                player.sendMessage("");
+                player.sendMessage("§aA new update is availible for NametagEdit: §fVersion " + buildString);
+                if (v.isSnapshot())
+                    player.sendMessage("§eYou are running version: §f" + v.getVersion() + " SNAPSHOT " + v.getBuild());
+                else
+                    player.sendMessage("§eYou are running version: §f" + v.getVersion());
+                player.sendMessage("§aType §e/ne confirm §a to update!");
+                return true;
+            }
+            else {
+                player.sendMessage("");
+                player.sendMessage("§aNo new updates.");
+                return true;
+            }
+        } catch (Exception e) {
+            player.sendMessage("");
+            player.sendMessage("§4NametagEdit failed to check for updates: §c" + e.toString());
+            player.sendMessage("§cCheck the console for more information.");
+            e.printStackTrace();
+        }
+        return false;
+    }
+    private static String getLatestVersion(CommandSender sender) {
+        InputStream is = null;
+
+        String version = null;
+
+        try {
+            is = new URL("http://dev.bukkit.org/server-mods/nametagedit/files.rss").openStream();
+
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
+
+            NodeList list = doc.getElementsByTagName("title");
+
+            for (int i = 0; i < list.getLength(); i++) {
+                String line = list.item(i).getTextContent();
+                String[] words = line.split(" ");
+                for (String w : words) {
+                    if (isVersionString(w)) {
+                        version = w;
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            sender.sendMessage("Failed to check for updates.");
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (is != null) is.close();
+            }
+            catch (Exception ex) {
+                sender.sendMessage("Failed to close the version checker stream (Oh noes!)");
+                ex.printStackTrace();
+            }
+        }
+        return version;
+    }
+    private static boolean isVersionString(String ver) {
+        char[] allowedChars = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.' };
+        for (char c : ver.toCharArray()) {
+            boolean r = false;
+            for (char a : allowedChars) {
+                if (c == a)
+                    r = true;
+            }
+            if (!r) return false;
+        }
+        return true;
+    }
 	/**
 	 * Initiates the download and installation process of a new plugin build. This disables
 	 * and enables the plugin after the download, so writing any code after running this
 	 * method will likely not be executed.
-	 * 
-	 * @param dev set to true to download a development build, false to download a stable build
+	 *
 	 * @param player the {@link CommandSender} who is executing this task.
 	 * @return true if the update was successful, false if not.
 	 */
 	@SuppressWarnings("unchecked")
-	static boolean downloadUpdate(CommandSender player, boolean dev) {
+	static boolean downloadUpdate(CommandSender player) {
+
+        String path = null;
+
+
+        InputStream is = null;
+
+        try {
+            is = new URL("http://dev.bukkit.org/server-mods/nametagedit/files.rss").openStream();
+
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
+
+            NodeList list = doc.getElementsByTagName("link");
+
+            path = list.item(0).getTextContent();
+        }
+        catch (Exception e) {
+            player.sendMessage("§cFailed to get update information!");
+        }
+
 		boolean success = false;
-		String base = "http://wacos.ca/plugins/NametagEdit/";
 		FileOutputStream fos = null;
 		BufferedInputStream bis = null;
 		String pluginPath = "plugins/" + NametagEdit.plugin.getPluginFile().getName();
-		String file;
-		if (dev) {
-			file = "latest.jar";
-		}
-		else {
-			file = "stable.jar";
-		}
 
-		try {
-			URL site = new URL(base + file);
+		if (path != null) try {
+			URL site = new URL(path);
 			bis = new BufferedInputStream(site.openStream());
 			fos = new FileOutputStream(pluginPath);
-			player.sendMessage("§eDownloading: §7" + base + file);
+			player.sendMessage("§eDownloading: §7" + path);
 			int read;
 			int count = -1;
 			while ((read = bis.read()) != -1) {

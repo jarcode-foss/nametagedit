@@ -197,7 +197,7 @@ public class GroupLoader {
 	/**
 	 * Checks the given line to see if it is enclosed in quotation marks.
 	 * 
-	 * @param line  the line to check
+	 * @param rawValue  the line to check
 	 * @return true if the line is enclosed in quotation marks, false if not.
 	 */
 	private static boolean checkValue(String rawValue) {

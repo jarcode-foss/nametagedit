@@ -1,6 +1,6 @@
 package ca.wacos;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
  */
 public class NametagCommand implements CommandExecutor {
 
-	HashMap<String, Boolean> updateTasks = new HashMap<String, Boolean>();
+	ArrayList<String> updateTasks = new ArrayList<String>();
 	
 	/**
 	 * onCommand method for the plugin.
@@ -25,7 +25,7 @@ public class NametagCommand implements CommandExecutor {
 	 * @param cmd the executed command
 	 * @param label the command label
 	 * @param args an array of {@link String} objects for the command arguments
-	 * @see #CommandExecutor
+	 * @see {@link CommandExecutor}
 	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player senderPlayer = null;
@@ -52,32 +52,7 @@ public class NametagCommand implements CommandExecutor {
 				return true;
 			}
 			if (args.length >= 1 && args[0].equalsIgnoreCase("update")) {
-				if (senderPlayer != null) {
-					if (!senderPlayer.isOp()) {
-						sender.sendMessage("§cOnly operators can update this plugin.");
-						return true;
-					}
-				}
-				if (args.length == 1) {
-					sender.sendMessage("§eUsage: §a/ne update [stable/dev]");
-					sender.sendMessage("§astable§e: Updates to the latest stable build (reccomended).");
-					sender.sendMessage("§adev§e: Updates to the latest development build.");
-				}
-				else if (args.length > 1) {
-					boolean dev = false;
-					if (args[1].equalsIgnoreCase("dev")) {
-						dev = true;
-					}
-					else if (args[1].equalsIgnoreCase("stable")) {
-						dev = false;
-					}
-					else {
-						sender.sendMessage("§eInvalid build type: §a" + args[1]);
-						return true;
-					}
-					return update(sender, dev);
-				}
-				return true;
+                return update(sender);
 			}
 			if (args.length >= 1 && args[0].equalsIgnoreCase("confirm")) {
 				if (senderPlayer != null) {
@@ -122,7 +97,7 @@ public class NametagCommand implements CommandExecutor {
 					
 					if (targetPlayer != null) {
 						if (PlayerLoader.getPlayer(targetPlayer.getName()) == null) {
-							ScoreboardManager.clear(targetPlayer.getName());
+                            NametagManager.clear(targetPlayer.getName());
 						}
 					}
 					
@@ -134,7 +109,7 @@ public class NametagCommand implements CommandExecutor {
 						suffix = NametagUtils.formatColors(text);
 					
 					if (targetPlayer != null)
-						ScoreboardManager.update(targetPlayer.getName(), prefix, suffix);
+						NametagManager.update(targetPlayer.getName(), prefix, suffix);
 					if (targetPlayer != null)
 						PlayerLoader.update(targetPlayer.getName(), prefix, suffix);
 					else
@@ -154,7 +129,7 @@ public class NametagCommand implements CommandExecutor {
 					else
 						sender.sendMessage("§eReset " + target + "\'s prefix and suffix.");
 					if (targetPlayer != null)
-						ScoreboardManager.clear(targetPlayer.getName());
+                        NametagManager.clear(targetPlayer.getName());
 					if (targetPlayer != null)
 						PlayerLoader.removePlayer(targetPlayer.getName(), null);
 					else
@@ -169,7 +144,7 @@ public class NametagCommand implements CommandExecutor {
 									prefix = NametagUtils.formatColors(prefix);
 								if (suffix != null)
 									suffix = NametagUtils.formatColors(suffix);
-								ScoreboardManager.overlap(targetPlayer.getName(), prefix, suffix);
+                                NametagManager.overlap(targetPlayer.getName(), prefix, suffix);
 								
 								break;
 							}
@@ -214,35 +189,36 @@ public class NametagCommand implements CommandExecutor {
 	 * Executes an update check from the given {@link CommandSender} and if an update exists, add a task to the current list of update tasks.
 	 * 
 	 * @param sender the {@link CommandSender} to execute from
-	 * @param dev whether or not to check for a snapshot / development build
 	 * @return true
-	 * @see Updater#checkForUpdates(CommandSender, boolean)
+	 * @see Updater#manuallyCheckForUpdates(CommandSender)
 	 */
-	private boolean update(CommandSender sender, boolean dev) {
+	private boolean update(CommandSender sender) {
+
 		String name;
+
 		if (sender instanceof Player) {
-			name = ((Player) sender).getName();
+			name = sender.getName();
 		}
 		else {
 			name = "^";
 		}
-		for (String key : updateTasks.keySet().toArray(new String[updateTasks.keySet().size()])) {
+		for (String key : updateTasks.toArray(new String[updateTasks.size()])) {
 			if (key.equals(name)) {
-				while (updateTasks.remove(key) != null) {}
+				while (updateTasks.remove(key)) {}
 				break;
 			}
 		}
-		if (Updater.checkForUpdates(dev, sender)) {
-			updateTasks.put(name, dev);
+		if (Updater.manuallyCheckForUpdates(sender)) {
+			updateTasks.add(name);
 		}
 		return true;
 	}
 	/**
-	 * Triggers a plugin update if the given {@link CommandSender} has created an update task previously by calling {@link #update(CommandSender, boolean)}
+	 * Triggers a plugin update if the given {@link CommandSender} has created an update task previously by calling {@link #update(CommandSender)}
 	 * 
 	 * @param sender the {@link CommandSender} to execute from
 	 * @return true
-	 * @see Updater#downloadUpdate(CommandSender, boolean)
+	 * @see Updater#downloadUpdate(CommandSender)
 	 */
 	private boolean download(CommandSender sender) {
 
@@ -253,16 +229,16 @@ public class NametagCommand implements CommandExecutor {
 		else {
 			name = "^";
 		}
-		for (String key : updateTasks.keySet().toArray(new String[updateTasks.keySet().size()])) {
+
+        for (String key : updateTasks.toArray(new String[updateTasks.size()])) {
 			if (key.equals(name)) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					if (p.isOp()) {
 						p.sendMessage("[§aNametagEdit§f] §ePlugin is updating...");
 					}
 				}
-				boolean dev = updateTasks.get(key);
 				updateTasks.clear();
-				Updater.downloadUpdate(sender, dev);
+				Updater.downloadUpdate(sender);
 				return true;
 			}
 		}
