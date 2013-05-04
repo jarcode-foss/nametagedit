@@ -20,7 +20,7 @@ import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
  * @author Levi Webb
  *
  */
-public class NametagUtils {
+class NametagUtils {
 	
 	/**
 	 * Replaces '&' symbols with '§' symbols when a formatting code follows it.
@@ -276,7 +276,7 @@ public class NametagUtils {
     /**
      * Clears out any teams in the vanilla scoreboard object.
      */
-    public static void clearOldTeams() {
+    static void clearOldTeams() {
         Scoreboard board = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getScoreboard();
         board.getTeams().clear();
     }

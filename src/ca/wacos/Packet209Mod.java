@@ -2,6 +2,7 @@ package ca.wacos;
 
 import net.minecraft.server.v1_5_R3.Packet209SetScoreboardTeam;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -10,12 +11,12 @@ import java.util.Collection;
  * Date: 03/05/13
  * Time: 12:20 AM
  */
-public class Packet209Mod {
+class Packet209Mod {
 
     Packet209SetScoreboardTeam packet;
 
     @SuppressWarnings("unchecked")
-    public Packet209Mod(String name, String prefix, String suffix, Collection players, int paramInt) {
+    Packet209Mod(String name, String prefix, String suffix, Collection players, int paramInt) {
 
         packet = new Packet209SetScoreboardTeam();
 
@@ -32,12 +33,12 @@ public class Packet209Mod {
             packet.e.addAll(players);
     }
     @SuppressWarnings("unchecked")
-    public Packet209Mod(String name, Collection players, int paramInt) {
+    Packet209Mod(String name, Collection players, int paramInt) {
 
         packet = new Packet209SetScoreboardTeam();
 
         if ((paramInt != 3) && (paramInt != 4)) throw new IllegalArgumentException("Method must be join or leave for player constructor");
-        if ((players == null) || (players.isEmpty())) throw new IllegalArgumentException("Players cannot be null/empty");
+        if ((players == null) || (players.isEmpty())) players = new ArrayList<String>();
 
         packet.f = paramInt;
         packet.a = name;

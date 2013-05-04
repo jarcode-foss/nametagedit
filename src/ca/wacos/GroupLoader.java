@@ -15,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Levi Webb
  *
  */
-public class GroupLoader {
+class GroupLoader {
 	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	static final boolean DEBUG = true;

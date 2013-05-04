@@ -34,13 +34,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
  *
  */
 
-public class Updater {
+class Updater {
 	/**
 	 * Retrieves the current {@link PluginVersion} for this plugin.
 	 * 
 	 * @return the {@link PluginVersion} representing this plugin's version.
 	 */
-	public static PluginVersion getVersion() {
+	static PluginVersion getVersion() {
 		String ver = NametagEdit.plugin.getDescription().getVersion();
 		int build = extractSnapshotFile();
 		if (build == -1) {

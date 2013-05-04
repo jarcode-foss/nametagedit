@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  * @author Levi Webb
  *
  */
-public class NametagManager {
+class NametagManager {
 	private static List<Integer> list = new ArrayList<Integer>();
 
     private static HashMap<TeamInfo, List<String>> teams = new HashMap<TeamInfo, List<String>>();
@@ -27,7 +27,7 @@ public class NametagManager {
         List<String> list = teams.get(team);
         if (list != null) {
             list.add(player);
-            Player p = Bukkit.getPlayer(player);
+            Player p = Bukkit.getPlayerExact(player);
             if (p != null)
                 sendPacketsAddToTeam(team, p);
         }
@@ -50,7 +50,7 @@ public class NametagManager {
         List<String> list = teams.get(team);
         if (list != null) {
             for (String p : list.toArray(new String[list.size()])) {
-                Player player = Bukkit.getPlayer(p);
+                Player player = Bukkit.getPlayerExact(p);
                 if (player != null)
                     sendPacketsRemoveFromTeam(team, player);
             }
@@ -65,7 +65,7 @@ public class NametagManager {
             List<String> list = teams.get(team);
             for (String p : list.toArray(new String[list.size()])) {
                 if (p.equals(player)) {
-                    Player pl = Bukkit.getPlayer(player);
+                    Player pl = Bukkit.getPlayerExact(player);
                     if (pl != null)
                         sendPacketsRemoveFromTeam(team, pl);
                     list.remove(p);
@@ -95,6 +95,13 @@ public class NametagManager {
     private static String[] getTeamPlayers(TeamInfo team) {
         List<String> list = teams.get(team);
         if (list != null) {
+            for (String p : list.toArray(new String[list.size()])) {
+                Player pl = Bukkit.getPlayerExact(p);
+                if (pl == null) {
+                    list.remove(p);
+                    sendPacketsRemoveFromTeam(team, pl);
+                }
+            }
             return list.toArray(new String[list.size()]);
         }
         else return new String[0];
@@ -305,7 +312,7 @@ public class NametagManager {
      *
      * @param p The player to send the packets to.
      */
-    public static void sendTeamsToPlayer(Player p) {
+    static void sendTeamsToPlayer(Player p) {
         try {
 
             for (TeamInfo team : getTeams()) {
@@ -405,10 +412,9 @@ public class NametagManager {
     /**
      * Clears out all teams and removes them for all the players. Called when the plugin is disabled.
      */
-    public static void reset() {
+    static void reset() {
         for (TeamInfo team : getTeams()) {
-            sendPacketsRemoveTeam(team);
+            removeTeam(team);
         }
-        teams.clear();
     }
 }

@@ -28,8 +28,8 @@ public class NametagEdit extends JavaPlugin {
 	 * @see #load()
 	 */
 	public void onEnable() {
+        plugin = this;
         NametagUtils.clearOldTeams();
-		plugin = this;
         NametagManager.load();
 		this.getServer().getPluginManager().registerEvents(new NametagEventHandler(), this);
 		getCommand("ne").setExecutor(new NametagCommand());
@@ -41,7 +41,7 @@ public class NametagEdit extends JavaPlugin {
 	/**
 	 * Loads groups, players, configurations, and refreshes information for in-game players.
 	 */
-	public void load() {
+	void load() {
 		PluginVersion v = Updater.getVersion();
 		if (v.isSnapshot()) {
 			NametagUtils.box(new String[] { "This is a development plugin build.",

@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Levi Webb
  *
  */
-public class PlayerLoader {
+class PlayerLoader {
 	
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	private static String path = null;

@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
  * @author Levi Webb
  *
  */
-public class NametagEventHandler implements Listener {
+class NametagEventHandler implements Listener {
 	
 	/**
 	 * Called when a player joins the server. This event is set to <i>HIGHEST</i> priority to address a conflict
@@ -29,7 +29,7 @@ public class NametagEventHandler implements Listener {
 	 * @param e  the {@link PlayerJoinEvent} associated with this listener.
 	 */
 	@EventHandler (priority = EventPriority.HIGHEST)
-	public void onPlayerJoin(final PlayerJoinEvent e) {
+	void onPlayerJoin(final PlayerJoinEvent e) {
 
         NametagManager.sendTeamsToPlayer(e.getPlayer());
 		
@@ -90,7 +90,7 @@ public class NametagEventHandler implements Listener {
 	 * @param e  the {@link PlayerDeathEvent} associated with this listener.
 	 */
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent e) {
+	void onPlayerDeath(PlayerDeathEvent e) {
 		if (NametagEdit.deathMessageEnabled) {
 			String formattedName = NametagManager.getFormattedName(e.getEntity().getName());
 			if (!formattedName.equals(e.getEntity().getName()))

@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
  * @author Levi Webb
  *
  */
-public class NametagCommand implements CommandExecutor {
+class NametagCommand implements CommandExecutor {
 
-	ArrayList<String> updateTasks = new ArrayList<String>();
+	private ArrayList<String> updateTasks = new ArrayList<String>();
 	
 	/**
 	 * onCommand method for the plugin.
@@ -103,15 +103,20 @@ public class NametagCommand implements CommandExecutor {
 					
 					String prefix = "";
 					String suffix = "";
-					if (operation.equalsIgnoreCase("prefix"))
+                    NametagChangeEvent.NametagChangeReason reason = null;
+					if (operation.equalsIgnoreCase("prefix")) {
 						prefix = NametagUtils.formatColors(text);
-					else if (operation.equalsIgnoreCase("suffix"))
+                        reason = NametagChangeEvent.NametagChangeReason.SET_PREFIX;
+                    }
+					else if (operation.equalsIgnoreCase("suffix")) {
 						suffix = NametagUtils.formatColors(text);
+                        reason = NametagChangeEvent.NametagChangeReason.SET_SUFFIX;
+                    }
 					
 					if (targetPlayer != null)
-						NametagManager.update(targetPlayer.getName(), prefix, suffix);
+                        setNametagSoft(targetPlayer.getName(), prefix, suffix, reason);
 					if (targetPlayer != null)
-						PlayerLoader.update(targetPlayer.getName(), prefix, suffix);
+                        PlayerLoader.update(targetPlayer.getName(), prefix, suffix);
 					else
 						PlayerLoader.update(target, prefix, suffix);
 					if (targetPlayer != null)
@@ -144,7 +149,7 @@ public class NametagCommand implements CommandExecutor {
 									prefix = NametagUtils.formatColors(prefix);
 								if (suffix != null)
 									suffix = NametagUtils.formatColors(suffix);
-                                NametagManager.overlap(targetPlayer.getName(), prefix, suffix);
+                                setNametagHard(targetPlayer.getName(), prefix, suffix, NametagChangeEvent.NametagChangeReason.RESET);
 								
 								break;
 							}
@@ -245,5 +250,17 @@ public class NametagCommand implements CommandExecutor {
 		sender.sendMessage("§eNothing to confirm!");
 		return true;
 	}
+    static void setNametagHard(String player, String prefix, String suffix, NametagChangeEvent.NametagChangeReason reason) {
+        NametagChangeEvent e = new NametagChangeEvent(player, NametagAPI.getPrefix(player), NametagAPI.getSuffix(player), prefix, suffix, NametagChangeEvent.NametagChangeType.HARD, reason);
+        Bukkit.getServer().getPluginManager().callEvent(e);
+        if (!e.isCancelled())
+            NametagManager.overlap(player, prefix, suffix);
+    }
+    static void setNametagSoft(String player, String prefix, String suffix, NametagChangeEvent.NametagChangeReason reason) {
+        NametagChangeEvent e = new NametagChangeEvent(player, NametagAPI.getPrefix(player), NametagAPI.getSuffix(player), prefix, suffix, NametagChangeEvent.NametagChangeType.SOFT, reason);
+        Bukkit.getServer().getPluginManager().callEvent(e);
+        if (!e.isCancelled())
+            NametagManager.update(player, prefix, suffix);
+    }
 
 }

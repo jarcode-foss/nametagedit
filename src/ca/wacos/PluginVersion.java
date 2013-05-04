@@ -6,7 +6,7 @@ package ca.wacos;
  * @author Levi Webb
  *
  */
-public class PluginVersion {
+class PluginVersion {
 	private boolean snapshot;
 	private int build = -1;
 	private String version;
