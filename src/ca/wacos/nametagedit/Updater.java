@@ -1,21 +1,4 @@
-package ca.wacos;
-
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+package ca.wacos.nametagedit;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,6 +9,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * This class checks for updates, downloads them, installs them, and reloads the plugin, as well as getting current plugin information.
@@ -36,9 +27,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 class Updater {
 	/**
-	 * Retrieves the current {@link PluginVersion} for this plugin.
-	 * 
-	 * @return the {@link PluginVersion} representing this plugin's version.
+	 * Retrieves the current {@link ca.wacos.nametagedit.PluginVersion} for this plugin.
+	 *
+	 * @return the {@link ca.wacos.nametagedit.PluginVersion} representing this plugin's version.
 	 */
 	static PluginVersion getVersion() {
 		String ver = NametagEdit.plugin.getDescription().getVersion();
@@ -52,7 +43,7 @@ class Updater {
 	}
 	/**
 	 * Extracts and reads the snapshot.txt file from the plugin .jar if it exists, and prints out the build number if it can be read.
-	 * 
+	 *
 	 * @return the build number, and -1 if the file does not exist or could not be loaded.
 	 */
 	private static int extractSnapshotFile() {
@@ -98,7 +89,7 @@ class Updater {
 					read.close();
 
 					zis.close();
-					
+
 					return build;
 				}
 				entry = zis.getNextEntry();
@@ -113,10 +104,10 @@ class Updater {
 	}
 	/**
 	 * Makes a connection to a website to download version information for latest stable builds.
-	 * The assigned {@link CommandSender} will have update information printed to it only
+	 * The assigned {@link org.bukkit.command.CommandSender} will have update information printed to it only
 	 * if a newer version is found or if there was an error.
-	 * 
-	 * @param player the {@link CommandSender} who is executing this task.
+	 *
+	 * @param player the {@link org.bukkit.command.CommandSender} who is executing this task.
 	 * @return true if there is an update, false if not.
 	 */
 	static boolean checkForUpdates(CommandSender player) {
@@ -139,6 +130,13 @@ class Updater {
 		}
 		return false;
 	}
+    /**
+     * Makes a connection to a website to download version information for latest stable builds.
+     * The assigned {@link org.bukkit.command.CommandSender} will have update information printed to it.
+     *
+     * @param player the {@link org.bukkit.command.CommandSender} who is executing this task.
+     * @return true if there is an update, false if not.
+     */
     static boolean manuallyCheckForUpdates(CommandSender player) {
         try {
             String buildString;
@@ -169,6 +167,13 @@ class Updater {
         }
         return false;
     }
+
+    /**
+     * Returns the latest plugin version from dev.bukkit.org of NametagEdit
+     *
+     * @param sender the player who is checking for the update.
+     * @return a string of the latest plugin version, null if something went wrong.
+     */
     private static String getLatestVersion(CommandSender sender) {
         InputStream is = null;
 
@@ -223,7 +228,7 @@ class Updater {
 	 * and enables the plugin after the download, so writing any code after running this
 	 * method will likely not be executed.
 	 *
-	 * @param player the {@link CommandSender} who is executing this task.
+	 * @param player the {@link org.bukkit.command.CommandSender} who is executing this task.
 	 * @return true if the update was successful, false if not.
 	 */
 	@SuppressWarnings("unchecked")
@@ -239,9 +244,7 @@ class Updater {
 
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
 
-            NodeList list = doc.getElementsByTagName("link");
-
-            path = list.item(0).getTextContent();
+            path = getDownloadLink(doc.getElementsByTagName("link").item(0).getTextContent());
         }
         catch (Exception e) {
             player.sendMessage("§cFailed to get update information!");
@@ -326,4 +329,43 @@ class Updater {
 		}
 		return success;
 	}
+
+    /**
+     * Retrieves the download link for the following file url at dev.bukkit.org.
+     * </br></br>
+     * This parses the HTML to find the download link for the .jar file.
+     *
+     * @param url
+     * @return
+     */
+    private static String getDownloadLink(String url) {
+        String link = "";
+        Scanner reader = null;
+        try {
+            reader = new Scanner(new URL(url).openStream());
+            while (reader.hasNext()) {
+                String line = reader.nextLine();
+                if (line.trim().startsWith("<li class=\"user-action user-action-download\"><span><a href=\"")) {
+                    String trimmedLine = line.trim();
+                    for (int t = 60; t < trimmedLine.length(); t++) {
+                        char c = trimmedLine.charAt(t);
+                        if (c == '"')
+                            break;
+                        else
+                            link += c;
+                    }
+                    break;
+                }
+            }
+        }
+        catch (Exception e) {
+            link = null;
+        }
+        finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return link;
+    }
 }

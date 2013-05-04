@@ -1,12 +1,12 @@
-package ca.wacos;
-
-import java.util.ArrayList;
+package ca.wacos.nametagedit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 /**
  * This class is responsible for handling the /ne command.
@@ -25,14 +25,14 @@ class NametagCommand implements CommandExecutor {
 	 * @param cmd the executed command
 	 * @param label the command label
 	 * @param args an array of {@link String} objects for the command arguments
-	 * @see {@link CommandExecutor}
+	 * @see {@link org.bukkit.command.CommandExecutor}
 	 */
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player senderPlayer = null;
 		if (sender instanceof Player) {
 			senderPlayer = (Player) sender;
 		}
-		
+
 		if (cmd.getName().equalsIgnoreCase("ne")) {
 			if (senderPlayer != null) {
 				if (!senderPlayer.hasPermission("NametagEdit.use")) {
@@ -83,24 +83,24 @@ class NametagCommand implements CommandExecutor {
 						}
 					}
 				}
-				
+
 				if (operation.equalsIgnoreCase("prefix") || operation.equalsIgnoreCase("suffix")) {
 					Player targetPlayer;
-					
+
 
 					targetPlayer = Bukkit.getPlayer(target);
-					
+
 					if (text.isEmpty()) {
 						sender.sendMessage("§eNo " + operation.toLowerCase() + " given!");
 						return true;
 					}
-					
+
 					if (targetPlayer != null) {
 						if (PlayerLoader.getPlayer(targetPlayer.getName()) == null) {
                             NametagManager.clear(targetPlayer.getName());
 						}
 					}
-					
+
 					String prefix = "";
 					String suffix = "";
                     NametagChangeEvent.NametagChangeReason reason = null;
@@ -112,7 +112,7 @@ class NametagCommand implements CommandExecutor {
 						suffix = NametagUtils.formatColors(text);
                         reason = NametagChangeEvent.NametagChangeReason.SET_SUFFIX;
                     }
-					
+
 					if (targetPlayer != null)
                         setNametagSoft(targetPlayer.getName(), prefix, suffix, reason);
 					if (targetPlayer != null)
@@ -126,7 +126,7 @@ class NametagCommand implements CommandExecutor {
 				}
 				else if (operation.equalsIgnoreCase("clear")) {
 					Player targetPlayer;
-					
+
 
 					targetPlayer = Bukkit.getPlayer(target);
 					if (targetPlayer != null)
@@ -139,7 +139,7 @@ class NametagCommand implements CommandExecutor {
 						PlayerLoader.removePlayer(targetPlayer.getName(), null);
 					else
 						PlayerLoader.removePlayer(target, null);
-					
+
 					if (targetPlayer != null)
 						for (String key : NametagEdit.groups.keySet().toArray(new String[NametagEdit.groups.keySet().size()])) {
 							if (targetPlayer.hasPermission(key)) {
@@ -149,8 +149,8 @@ class NametagCommand implements CommandExecutor {
 									prefix = NametagUtils.formatColors(prefix);
 								if (suffix != null)
 									suffix = NametagUtils.formatColors(suffix);
-                                setNametagHard(targetPlayer.getName(), prefix, suffix, NametagChangeEvent.NametagChangeReason.RESET);
-								
+                                setNametagHard(targetPlayer.getName(), prefix, suffix, NametagChangeEvent.NametagChangeReason.GROUP_NODE);
+
 								break;
 							}
 						}
@@ -176,7 +176,7 @@ class NametagCommand implements CommandExecutor {
 	}
 	/**
 	 * Combines the given array of {@link String} objects into a single (@link String}
-	 * 
+	 *
 	 * @param args  the (@link String} array to combine
 	 * @return  the combined string
 	 */
@@ -191,11 +191,11 @@ class NametagCommand implements CommandExecutor {
 		return rv;
 	}
 	/**
-	 * Executes an update check from the given {@link CommandSender} and if an update exists, add a task to the current list of update tasks.
-	 * 
-	 * @param sender the {@link CommandSender} to execute from
+	 * Executes an update check from the given {@link org.bukkit.command.CommandSender} and if an update exists, add a task to the current list of update tasks.
+	 *
+	 * @param sender the {@link org.bukkit.command.CommandSender} to execute from
 	 * @return true
-	 * @see Updater#manuallyCheckForUpdates(CommandSender)
+	 * @see ca.wacos.nametagedit.Updater#manuallyCheckForUpdates(org.bukkit.command.CommandSender)
 	 */
 	private boolean update(CommandSender sender) {
 
@@ -219,11 +219,11 @@ class NametagCommand implements CommandExecutor {
 		return true;
 	}
 	/**
-	 * Triggers a plugin update if the given {@link CommandSender} has created an update task previously by calling {@link #update(CommandSender)}
-	 * 
-	 * @param sender the {@link CommandSender} to execute from
+	 * Triggers a plugin update if the given {@link org.bukkit.command.CommandSender} has created an update task previously by calling {@link #update(org.bukkit.command.CommandSender)}
+	 *
+	 * @param sender the {@link org.bukkit.command.CommandSender} to execute from
 	 * @return true
-	 * @see Updater#downloadUpdate(CommandSender)
+	 * @see ca.wacos.nametagedit.Updater#downloadUpdate(org.bukkit.command.CommandSender)
 	 */
 	private boolean download(CommandSender sender) {
 
@@ -250,12 +250,30 @@ class NametagCommand implements CommandExecutor {
 		sender.sendMessage("§eNothing to confirm!");
 		return true;
 	}
+
+    /**
+     * Sets a player's nametag with the given information and additional reason.
+     *
+     * @param player the player whose nametag to set
+     * @param prefix the prefix to set
+     * @param suffix the suffix to set
+     * @param reason the reason for setting the nametag
+     */
     static void setNametagHard(String player, String prefix, String suffix, NametagChangeEvent.NametagChangeReason reason) {
         NametagChangeEvent e = new NametagChangeEvent(player, NametagAPI.getPrefix(player), NametagAPI.getSuffix(player), prefix, suffix, NametagChangeEvent.NametagChangeType.HARD, reason);
         Bukkit.getServer().getPluginManager().callEvent(e);
         if (!e.isCancelled())
             NametagManager.overlap(player, prefix, suffix);
     }
+
+    /**
+     * Sets a player's nametag with the given information and additional reason.
+     *
+     * @param player the player whose nametag to set
+     * @param prefix the prefix to set
+     * @param suffix the suffix to set
+     * @param reason the reason for setting the nametag
+     */
     static void setNametagSoft(String player, String prefix, String suffix, NametagChangeEvent.NametagChangeReason reason) {
         NametagChangeEvent e = new NametagChangeEvent(player, NametagAPI.getPrefix(player), NametagAPI.getSuffix(player), prefix, suffix, NametagChangeEvent.NametagChangeType.SOFT, reason);
         Bukkit.getServer().getPluginManager().callEvent(e);

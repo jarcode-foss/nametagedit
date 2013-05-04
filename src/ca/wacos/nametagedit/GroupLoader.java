@@ -1,4 +1,6 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
+
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,8 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
-
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * This class is responsible for loading group information from plugins/groups.txt
@@ -21,10 +21,10 @@ class GroupLoader {
 	static final boolean DEBUG = true;
 	
 	/**
-	 * Loads the groups.txt from the plugin folder, returning a {@link LinkedHashMap} containing all the groups, which is blank if the groups failed to load.
-	 * 
+	 * Loads the groups.txt from the plugin folder, returning a {@link java.util.LinkedHashMap} containing all the groups, which is blank if the groups failed to load.
+	 *
 	 * @param plugin  the plugin instance
-	 * @return  a {@link LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
+	 * @return  a {@link java.util.LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link java.util.LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
 	 */
 	static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
 		String folder = "plugins/" + plugin.getName();
@@ -48,12 +48,12 @@ class GroupLoader {
 		}
 	}
 	/**
-	 * Generates a new groups file,  then returns some predefined configuration data in a {@link LinkedHashMap}.
-	 * 
+	 * Generates a new groups file,  then returns some predefined configuration data in a {@link java.util.LinkedHashMap}.
+	 *
 	 * @param target  the target file to generate.
-	 * @return  a {@link LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
-	 * @see #loadConfig(File)
-	 * @see #load(JavaPlugin)
+	 * @return  a {@link java.util.LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link java.util.LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
+	 * @see #loadConfig(java.io.File)
+	 * @see #load(org.bukkit.plugin.java.JavaPlugin)
 	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> generateConfig(File target) {
 		PrintWriter out = null;
@@ -69,35 +69,35 @@ class GroupLoader {
 		out.println("nametag.group.member prefix = \"[&eMember&f] \"");
 		out.println("nametag.group.swag prefix = \"&eThe &b\"");
 		out.println("nametag.group.swag suffix = \" &cSwagmaster\"");
-		
+
 		LinkedHashMap<String, LinkedHashMap<String, String>> map = new LinkedHashMap<String, LinkedHashMap<String, String>>();
-		
+
 		LinkedHashMap<String, String> admin = new LinkedHashMap<String, String>();
 		admin.put("prefix", "[&cAdmin&f] ");
 		map.put("nametag.group.admin", admin);
-		
+
 		LinkedHashMap<String, String> mod = new LinkedHashMap<String, String>();
 		mod.put("prefix", "[&bMod&f] ");
 		map.put("nametag.group.mod", mod);
-		
+
 		LinkedHashMap<String, String> member = new LinkedHashMap<String, String>();
 		member.put("prefix", "[&eMember&f] ");
 		map.put("nametag.group.member", member);
-		
+
 		LinkedHashMap<String, String> swag = new LinkedHashMap<String, String>();
 		swag.put("prefix", "&eThe &b");
 		swag.put("suffix", " &cSwagmaster");
 		map.put("nametag.group.swag", swag);
-		
+
 		out.close();
-		
+
 		return map;
 	}
 	/**
-	 * Loads the specified groups file and returns the {@link LinkedHashMap} with all the groups data.
-	 * 
+	 * Loads the specified groups file and returns the {@link java.util.LinkedHashMap} with all the groups data.
+	 *
 	 * @param source  the target file to load.
-	 * @return  a {@link LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
+	 * @return  a {@link java.util.LinkedHashMap} of groups, with a {@link String} key (player names), and another {@link java.util.LinkedHashMap} as the value, containing both the operation (prefix/suffix) and the actual value.
 	 */
 	static LinkedHashMap<String, LinkedHashMap<String, String>> loadConfig(File source) {
 		Scanner in = null;

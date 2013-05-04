@@ -1,4 +1,10 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
+
+import net.minecraft.server.v1_5_R3.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,13 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
-
-import net.minecraft.server.v1_5_R3.*;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 
 /**
  * This class contains various tools for formatting strings, printing information, and saving information.
@@ -132,20 +131,21 @@ class NametagUtils {
 		return f1;
 	}
 	/**
-	 * Returns the {@link Location} of an offline player by extracting it from his/her data file.
-	 * 
+	 * Returns the {@link org.bukkit.Location} of an offline player by extracting it from his/her data file.
+	 *
 	 * @param s the player name
-	 * @return the {@link Location} of the player
+	 * @return the {@link org.bukkit.Location} of the player
 	 */
+    // This method is no longer used by NametagEdit 1.6+
 	static Location getOfflineLoc(String s) {
 		File file = new File(Bukkit.getWorlds().get(0).getName() + "/players/" + s + ".dat");
 		if (!file.exists())
 			return null;
 		try {
 			NBTTagCompound compound = NBTCompressedStreamTools.a(new FileInputStream(file));
-			
+
 			World w = Bukkit.getWorld(new UUID(compound.getLong("WorldUUIDMost"), compound.getLong("WorldUUIDLeast")));
-			
+
 			NBTTagList list = compound.getList("Pos");
 			double x = ((NBTTagDouble)list.get(0)).data;
 			double y = ((NBTTagDouble)list.get(1)).data;
@@ -154,25 +154,26 @@ class NametagUtils {
 
 			float yaw = ((NBTTagFloat)list.get(0)).data;
 			float pitch = ((NBTTagFloat)list.get(1)).data;
-			
+
 			if (GroupLoader.DEBUG)
 				System.out.println("Loaded location from player file: " + w.getName() + ", " + x + ", " + y + ", " + z + ", " + yaw + ", " + pitch);
-			
+
 			Location loc = new Location(w, x, y, z, yaw, pitch);
-			
+
 			return loc;
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 	/**
-	 * Sets the {@link Location} of an offline player by compressing it into his/her data file.
-	 * 
+	 * Sets the {@link org.bukkit.Location} of an offline player by compressing it into his/her data file.
+	 *
 	 * @param s the player name
-	 * @param l the {@link Location} of the player
+	 * @param l the {@link org.bukkit.Location} of the player
 	 */
+    // This method is no longer used by NametagEdit 1.6+
 	static void setOfflineLoc(String s, Location l) {
 		File file = new File(Bukkit.getWorlds().get(0).getName() + "/players/" + s + ".dat");
 		if (!file.exists())

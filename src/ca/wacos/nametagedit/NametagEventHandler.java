@@ -1,16 +1,11 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
+import java.util.LinkedHashMap;
 
 /**
  * This class is responsible for handling various events in the server.
@@ -26,15 +21,15 @@ class NametagEventHandler implements Listener {
 	 * 
 	 * This event updates nametag information, and the tab list (if enabled).
 	 * 
-	 * @param e  the {@link PlayerJoinEvent} associated with this listener.
+	 * @param e  the {@link org.bukkit.event.player.PlayerJoinEvent} associated with this listener.
 	 */
 	@EventHandler (priority = EventPriority.HIGHEST)
 	void onPlayerJoin(final PlayerJoinEvent e) {
 
         NametagManager.sendTeamsToPlayer(e.getPlayer());
-		
+
 		NametagManager.clear(e.getPlayer().getName());
-		
+
 		boolean setGroup = true;
 
 		LinkedHashMap<String, String> playerData = PlayerLoader.getPlayer(e.getPlayer().getName());
@@ -51,7 +46,7 @@ class NametagEventHandler implements Listener {
             NametagManager.overlap(e.getPlayer().getName(), prefix, suffix);
 			setGroup = false;
 		}
-		
+
 		if (setGroup) {
 			for (String key : NametagEdit.groups.keySet().toArray(new String[NametagEdit.groups.keySet().size()])) {
 				if (e.getPlayer().hasPermission(key)) {
@@ -64,8 +59,8 @@ class NametagEventHandler implements Listener {
 					if (GroupLoader.DEBUG) {
 						System.out.println("Setting prefix/suffix for " + e.getPlayer().getName() + ": " + prefix + ", " + suffix + " (node)");
 					}
-                    NametagManager.overlap(e.getPlayer().getName(), prefix, suffix);
-					
+                    NametagCommand.setNametagHard(e.getPlayer().getName(), prefix, suffix, NametagChangeEvent.NametagChangeReason.GROUP_NODE);
+
 					break;
 				}
 			}
@@ -77,17 +72,17 @@ class NametagEventHandler implements Listener {
 				tab += str.charAt(t);
 			e.getPlayer().setPlayerListName(tab);
 		}
-		
+
 		if (e.getPlayer().isOp()) {
-			
+
 			Updater.checkForUpdates(e.getPlayer());
 		}
 	}
 	/**
 	 * Called when a player dies in the server. If enabled, this plugin will parse through the death message
 	 * and remove any formatting created by the player's nametag.
-	 * 
-	 * @param e  the {@link PlayerDeathEvent} associated with this listener.
+	 *
+	 * @param e  the {@link org.bukkit.event.entity.PlayerDeathEvent} associated with this listener.
 	 */
 	@EventHandler
 	void onPlayerDeath(PlayerDeathEvent e) {

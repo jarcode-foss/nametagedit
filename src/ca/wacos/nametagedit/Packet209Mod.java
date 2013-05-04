@@ -1,4 +1,4 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
 
 import net.minecraft.server.v1_5_R3.Packet209SetScoreboardTeam;
 
@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Written by Levi Webb
- * <p/>
- * Date: 03/05/13
- * Time: 12:20 AM
+ * A small wrapper for the Packet209SetScoreboardTeam packet.
  */
 class Packet209Mod {
 

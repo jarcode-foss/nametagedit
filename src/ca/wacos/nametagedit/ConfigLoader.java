@@ -1,4 +1,6 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
+
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,8 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
-
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * This class is responsible for loading plugin configurations from plugins/players.txt
@@ -20,10 +20,10 @@ class ConfigLoader {
 	private static final String PREFIX = "[NAMETAG CONFIG] ";
 	
 	/**
-	 * Loads the config.txt from the plugin folder, returning a {@link LinkedHashMap} containing all the configuration info, which is blank if the configuration failed to load.
-	 * 
+	 * Loads the config.txt from the plugin folder, returning a {@link java.util.LinkedHashMap} containing all the configuration info, which is blank if the configuration failed to load.
+	 *
 	 * @param plugin  the plugin instance
-	 * @return  a {@link LinkedHashMap} of configurations, with a {@link String} key, and another {@link LinkedHashMap} as the value, containing both the operation and the actual configuration value.
+	 * @return  a {@link java.util.LinkedHashMap} of configurations, with a {@link String} key, and another {@link java.util.LinkedHashMap} as the value, containing both the operation and the actual configuration value.
 	 */
 	static LinkedHashMap<String, LinkedHashMap<String, String>> load(JavaPlugin plugin) {
 		String folder = "plugins/" + plugin.getName();
@@ -47,12 +47,12 @@ class ConfigLoader {
 		}
 	}
 	/**
-	 * Generates a new config file, loads it, then returns the {@link LinkedHashMap} with all the configuration data.
-	 * 
+	 * Generates a new config file, loads it, then returns the {@link java.util.LinkedHashMap} with all the configuration data.
+	 *
 	 * @param target  the target file to generate and load.
-	 * @return  a {@link LinkedHashMap} of configurations, with a {@link String} key, and another {@link LinkedHashMap} as the value, containing both the operation and the actual configuration value.
-	 * @see #loadConfig(File)
-	 * @see #load(JavaPlugin)
+	 * @return  a {@link java.util.LinkedHashMap} of configurations, with a {@link String} key, and another {@link java.util.LinkedHashMap} as the value, containing both the operation and the actual configuration value.
+	 * @see #loadConfig(java.io.File)
+	 * @see #load(org.bukkit.plugin.java.JavaPlugin)
 	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> generateConfig(File target) {
 		PrintWriter out = null;
@@ -71,16 +71,16 @@ class ConfigLoader {
 		out.println("// If enabled, this will remove any formatting created in the tab list by prefixes / suffixes");
 		out.println("// Do not set this to true if you already have a plugin that changes the tab list");
 		out.println("tab-list-mask enabled = false");
-		
+
 		out.close();
-		
+
 		return loadConfig(target);
 	}
 	/**
-	 * Loads the specified config file and returns the {@link LinkedHashMap} with all the configuration data.
-	 * 
+	 * Loads the specified config file and returns the {@link java.util.LinkedHashMap} with all the configuration data.
+	 *
 	 * @param source  the target file to load.
-	 * @return  a {@link LinkedHashMap} of configurations, with a {@link String} key, and another {@link LinkedHashMap} as the value, containing both the operation and the actual configuration value.
+	 * @return  a {@link java.util.LinkedHashMap} of configurations, with a {@link String} key, and another {@link java.util.LinkedHashMap} as the value, containing both the operation and the actual configuration value.
 	 */
 	private static LinkedHashMap<String, LinkedHashMap<String, String>> loadConfig(File source) {
 		Scanner in = null;

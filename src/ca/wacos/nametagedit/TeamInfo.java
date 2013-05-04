@@ -1,4 +1,4 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
 
 /**
  * Represents a scoreboard team, used in the NametagManager object.

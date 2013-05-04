@@ -1,13 +1,13 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
 
-import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Bukkit;
-
-import java.util.*;
-
 import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
-
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * This class dynamically creates teams with numerical names and certain prefixes/suffixes (it ignores teams with other characters)
@@ -21,6 +21,10 @@ class NametagManager {
 	private static List<Integer> list = new ArrayList<Integer>();
 
     private static HashMap<TeamInfo, List<String>> teams = new HashMap<TeamInfo, List<String>>();
+
+    /* These methods are for taking account of the current team configuration  */
+    /* as well as changing it. Changes are sent to player with packet 209 when */
+    /* teams are created, removed, or have players added/remove from them.     */
 
     private static void addToTeam(TeamInfo team, String player) {
         removeFromTeam(player);
@@ -106,6 +110,7 @@ class NametagManager {
         }
         else return new String[0];
     }
+    /* And that's all the methods for team manipulation. */
 
 	/**
 	 * Initializes this class and loads current teams that are manipulated by this plugin.
@@ -242,19 +247,19 @@ class NametagManager {
 		return team;
 	}
 	/**
-	 * Gets the {@link ScoreboardTeam} for the given prefix and suffix, and if none matches, creates a new team with the provided info.
+	 * Gets the {@link net.minecraft.server.v1_5_R3.ScoreboardTeam} for the given prefix and suffix, and if none matches, creates a new team with the provided info.
 	 * This also removes teams that currently have no players.
-	 * 
+	 *
 	 * @param prefix the team's prefix
 	 * @param suffix the team's suffix
 	 * @return a team with the corresponding prefix/suffix
 	 */
 	private static TeamInfo get(String prefix, String suffix) {
-		
+
 		update();
-		
+
 		for (int t : list.toArray(new Integer[list.size()])) {
-			
+
 			if (getTeam("" + t) != null) {
 				TeamInfo team = getTeam("" + t);
 				if (team.getSuffix().equals(suffix) && team.getPrefix().equals(prefix)) {
@@ -263,11 +268,11 @@ class NametagManager {
 			}
 		}
 		return declareTeam(nextName() + "", prefix, suffix);
-		
+
 	}
 	/**
 	 * Returns the next available team name that is not taken.
-	 * 
+	 *
 	 * @return an integer that for a team name that is not taken.
 	 */
 	private static int nextName() {
@@ -280,7 +285,7 @@ class NametagManager {
 					at++;
 					cont = true;
 				}
-					
+
 			}
 		}
 		list.add(at);
@@ -327,6 +332,12 @@ class NametagManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sends packets out to players to add the given team
+     *
+     * @param team the team to add
+     */
     private static void sendPacketsAddTeam(TeamInfo team) {
 
         try {
@@ -341,6 +352,12 @@ class NametagManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sends packets out to players to remove the given team
+     *
+     * @param team the team to remove
+     */
     private static void sendPacketsRemoveTeam(TeamInfo team) {
 
         boolean cont = false;
@@ -362,6 +379,13 @@ class NametagManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sends out packets to players to add the given player to the given team
+     *
+     * @param team the team to use
+     * @param player the player to add
+     */
     private static void sendPacketsAddToTeam(TeamInfo team, Player player) {
 
         boolean cont = false;
@@ -383,6 +407,13 @@ class NametagManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sends out packets to players to remove the given player from the given team.
+     *
+     * @param team the team to remove from
+     * @param player the player to remove
+     */
     private static void sendPacketsRemoveFromTeam(TeamInfo team, Player player) {
 
         boolean cont = false;

@@ -1,4 +1,4 @@
-package ca.wacos;
+package ca.wacos.nametagedit;
 
 /**
  * This class stores information about a plugin version.
@@ -11,8 +11,8 @@ class PluginVersion {
 	private int build = -1;
 	private String version;
 	/**
-	 * Creates a new {@link PluginVersion} object with the given version and development build number
-	 * 
+	 * Creates a new {@link ca.wacos.nametagedit.PluginVersion} object with the given version and development build number
+	 *
 	 * @param version the plugin version
 	 * @param build the development build number
 	 */
@@ -22,7 +22,7 @@ class PluginVersion {
 		snapshot = true;
 	}
 	/**
-	 * Creates a new {@link PluginVersion} object with the given version.
+	 * Creates a new {@link ca.wacos.nametagedit.PluginVersion} object with the given version.
 	 * 
 	 * @param version the plugin version
 	 */
