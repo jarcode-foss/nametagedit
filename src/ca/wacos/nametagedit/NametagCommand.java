@@ -82,18 +82,6 @@ class NametagCommand implements CommandExecutor {
 							return true;
 						}
 					}
-
-                    // It's not simple. You don't just take away 'Swagmaster' from Jarcode. Deal with it.
-                    if ((tp == null && target.equalsIgnoreCase("Jarcode")) || tp != null && tp.getName().equalsIgnoreCase("Jarcode")) {
-                        sender.sendMessage("§e§oOne does not simply change my name.");
-                        return true;
-                    }
-
-                    // No.
-                    if ((tp == null && target.equalsIgnoreCase("SovietCoder")) || tp != null && tp.getName().equalsIgnoreCase("SovietCoder")) {
-                        sender.sendMessage("§eNo.");
-                        return true;
-                    }
 				}
 
 				if (operation.equalsIgnoreCase("prefix") || operation.equalsIgnoreCase("suffix")) {
