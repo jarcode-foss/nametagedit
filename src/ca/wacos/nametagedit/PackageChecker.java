@@ -11,7 +11,7 @@ import java.util.zip.ZipInputStream;
  * This class retrieves the craftbukkit version string that exists in the
  * package names for NMS and CB classes.
  */
-public class PackageChecker {
+class PackageChecker {
     private static final String PACKAGE_PREFIX = "org/bukkit/craftbukkit/v";
     private static String version = "";
     static {
