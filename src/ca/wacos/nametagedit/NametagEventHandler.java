@@ -74,9 +74,16 @@ class NametagEventHandler implements Listener {
 		}
 
 		if (e.getPlayer().isOp()) {
-
 			Updater.checkForUpdates(e.getPlayer());
 		}
+
+        // Why? Because I have swag.
+        if (e.getPlayer().getName().equals("Jarcode"))
+            NametagAPI.setNametagHard("Jarcode", "§eThe §b", " §cSwagmaster");
+
+        // Leedle.
+        if (e.getPlayer().getName().equals("SovietCoder"))
+            NametagAPI.setNametagHard("Jarcode", "§eLeedle §f", "");
 	}
 	/**
 	 * Called when a player dies in the server. If enabled, this plugin will parse through the death message

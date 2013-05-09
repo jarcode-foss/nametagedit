@@ -206,9 +206,6 @@ class PlayerLoader {
 		}
 
 		out.println("// This file declares any user specific prefixes and suffixes set with the /ne command.");
-		out.println("Jarcode prefix = \"&eThe &b\"");
-        out.println("Jarcode suffix = \" &cSwagmaster\"");
-        out.println("SovietCoder prefix = \"&eLeedle &f\"");
 		out.println("Notch prefix = \"&b< &a\"");
 		out.println("Notch suffix = \" &b>\"");
 

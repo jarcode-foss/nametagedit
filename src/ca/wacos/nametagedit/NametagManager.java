@@ -1,7 +1,6 @@
 package ca.wacos.nametagedit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -18,6 +17,10 @@ import java.util.List;
  *
  */
 class NametagManager {
+
+    // Prefix to append to all team names (nothing to do with prefix/suffix)
+    private static final String TEAM_NAME_PREFIX = "NTE";
+
 	private static List<Integer> list = new ArrayList<Integer>();
 
     private static HashMap<TeamInfo, List<String>> teams = new HashMap<TeamInfo, List<String>>();
@@ -260,14 +263,14 @@ class NametagManager {
 
 		for (int t : list.toArray(new Integer[list.size()])) {
 
-			if (getTeam("" + t) != null) {
-				TeamInfo team = getTeam("" + t);
+			if (getTeam(TEAM_NAME_PREFIX + t) != null) {
+				TeamInfo team = getTeam(TEAM_NAME_PREFIX + t);
 				if (team.getSuffix().equals(suffix) && team.getPrefix().equals(prefix)) {
 					return team;
 				}
 			}
 		}
-		return declareTeam(nextName() + "", prefix, suffix);
+		return declareTeam(TEAM_NAME_PREFIX + nextName(), prefix, suffix);
 
 	}
 	/**
@@ -322,9 +325,9 @@ class NametagManager {
 
             for (TeamInfo team : getTeams()) {
                 Packet209Mod mod = new Packet209Mod(team.getName(), team.getPrefix(), team.getSuffix(), new ArrayList<String>(), 0);
-                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(mod.packet);
+                mod.sendToPlayer(p);
                 mod = new Packet209Mod(team.getName(), Arrays.asList(getTeamPlayers(team)), 3);
-                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(mod.packet);
+                mod.sendToPlayer(p);
             }
         }
         catch (Exception e) {
@@ -344,7 +347,7 @@ class NametagManager {
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 Packet209Mod mod = new Packet209Mod(team.getName(), team.getPrefix(), team.getSuffix(), new ArrayList<String>(), 0);
-                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(mod.packet);
+                mod.sendToPlayer(p);
             }
         }
         catch (Exception e) {
@@ -371,7 +374,7 @@ class NametagManager {
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 Packet209Mod mod = new Packet209Mod(team.getName(), team.getPrefix(), team.getSuffix(), new ArrayList<String>(), 1);
-                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(mod.packet);
+                mod.sendToPlayer(p);
             }
         }
         catch (Exception e) {
@@ -399,7 +402,7 @@ class NametagManager {
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 Packet209Mod mod = new Packet209Mod(team.getName(), Arrays.asList(player.getName()), 3);
-                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(mod.packet);
+                mod.sendToPlayer(p);
             }
         }
         catch (Exception e) {
@@ -431,7 +434,7 @@ class NametagManager {
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 Packet209Mod mod = new Packet209Mod(team.getName(), Arrays.asList(player), 4);
-                ((CraftPlayer) p).getHandle().playerConnection.sendPacket(mod.packet);
+                mod.sendToPlayer(p);
             }
         }
         catch (Exception e) {
