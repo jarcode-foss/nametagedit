@@ -71,6 +71,9 @@ class ConfigLoader {
 		out.println("// If enabled, this will remove any formatting created in the tab list by prefixes / suffixes");
 		out.println("// Do not set this to true if you already have a plugin that changes the tab list");
 		out.println("tab-list-mask enabled = false");
+        out.println("");
+        out.println("// If enabled, this plugin will check for updates when a operator logs in.");
+        out.println("check-for-updates enabled = true");
 
 		out.close();
 
@@ -189,9 +192,6 @@ class ConfigLoader {
 				return false;
 			}
 			System.out.println("[NametagEdit] Could not parse boolean for \"" + name + " " + operation + "\" in config.txt, value given: " + value + ", defaulting to " + d);
-		}
-		else {
-			System.out.println("[NametagEdit] Value does not exist for \"" + name + " " + operation + "\" in config.txt, defaulting to " + d);
 		}
 		return d;
 	}

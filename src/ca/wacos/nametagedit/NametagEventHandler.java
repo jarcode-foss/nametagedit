@@ -73,7 +73,7 @@ class NametagEventHandler implements Listener {
 			e.getPlayer().setPlayerListName(tab);
 		}
 
-		if (e.getPlayer().isOp()) {
+		if (e.getPlayer().isOp() && NametagEdit.checkForUpdatesEnabled) {
 			Updater.checkForUpdates(e.getPlayer());
 		}
 
