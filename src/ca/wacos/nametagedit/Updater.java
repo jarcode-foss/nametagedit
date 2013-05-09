@@ -156,7 +156,7 @@ class Updater {
             }
             else {
                 player.sendMessage("");
-                player.sendMessage("§aNo new updates.");
+                player.sendMessage("§aNo new updates. §7(latest " + buildString + ")");
                 return true;
             }
         } catch (Exception e) {
@@ -186,12 +186,14 @@ class Updater {
 
             NodeList list = doc.getElementsByTagName("title");
 
-            for (int i = 0; i < list.getLength(); i++) {
-                String line = list.item(i).getTextContent();
-                String[] words = line.split(" ");
-                for (String w : words) {
-                    if (isVersionString(w)) {
-                        version = w;
+            for (int t = 0; t < list.getLength(); t++) {
+                for (int i = 0; i < list.getLength(); i++) {
+                    String line = list.item(t).getTextContent();
+                    String[] words = line.split(" ");
+                    for (String w : words) {
+                        if (isVersionString(w)) {
+                            version = version == null || NametagUtils.compareVersion(version, w) ? w : version;
+                        }
                     }
                 }
             }
@@ -236,18 +238,39 @@ class Updater {
 
         String path = null;
 
-
-        InputStream is = null;
+        InputStream is;
 
         try {
+
+            String version = null;
+            int index = -1;
+
             is = new URL("http://dev.bukkit.org/server-mods/nametagedit/files.rss").openStream();
 
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
 
-            path = getDownloadLink(doc.getElementsByTagName("link").item(0).getTextContent());
+            NodeList list = doc.getElementsByTagName("title");
+
+            for (int t = 0; t < list.getLength(); t++) {
+                for (int i = 0; i < list.getLength(); i++) {
+                    String line = list.item(t).getTextContent();
+                    String[] words = line.split(" ");
+                    for (String w : words) {
+                        if (isVersionString(w)) {
+                            if (version == null || NametagUtils.compareVersion(version, w)) {
+                                version = w;
+                                index = t;
+                            }
+                        }
+                    }
+                }
+            }
+
+            path = getDownloadLink(doc.getElementsByTagName("link").item(index).getTextContent());
         }
         catch (Exception e) {
             player.sendMessage("§cFailed to get update information!");
+            e.printStackTrace();
         }
 
 		boolean success = false;
