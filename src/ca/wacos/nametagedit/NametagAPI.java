@@ -5,6 +5,8 @@ import ca.wacos.nametagedit.NametagChangeEvent.NametagChangeType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
+
 /**
  * This API class is used to set prefixes and suffixes at a high level,
  * much alike what the in-game /ne commands do. These methods fire
@@ -240,5 +242,20 @@ public class NametagAPI {
      */
     public static String getVersion() {
         return NametagEdit.plugin.getDescription().getVersion();
+    }
+
+    /**
+     * Returns whether the player has a nametag saved for him/her, regardless of group nodes.
+     *
+     * @param player the player to check
+     * @return true if there is a custom nametag set, false otherwise.
+     */
+    public static boolean hasCustomNametag(String player) {
+        LinkedHashMap<String, String> map = PlayerLoader.getPlayer(player);
+        String prefix = map.get("prefix");
+        String suffix = map.get("suffix");
+        if ((prefix == null || prefix.isEmpty()) && (suffix == null || suffix.isEmpty()))
+            return false;
+        else return true;
     }
 }

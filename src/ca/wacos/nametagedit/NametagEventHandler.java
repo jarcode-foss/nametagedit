@@ -1,10 +1,13 @@
 package ca.wacos.nametagedit;
 
+import org.anjocaido.groupmanager.events.GMUserEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import ru.tehkode.permissions.events.PermissionEntityEvent;
+
 import java.util.LinkedHashMap;
 
 /**
@@ -99,4 +102,20 @@ class NametagEventHandler implements Listener {
 				e.setDeathMessage(e.getDeathMessage().replace(formattedName, e.getEntity().getName()));
 		}
 	}
+    @EventHandler
+    void onPermissionChangePEX(PermissionEntityEvent e) {
+        if (e.getEntity() != null) {
+            String name = e.getEntity().getName();
+            if (!NametagAPI.hasCustomNametag(name))
+                NametagAPI.resetNametag(name);
+        }
+    }
+    @EventHandler
+    void onPermissionChangeGM(GMUserEvent e) {
+        if (e.getUserName() != null) {
+            String name = e.getUserName();
+            if (!NametagAPI.hasCustomNametag(name))
+                NametagAPI.resetNametag(name);
+        }
+    }
 }
