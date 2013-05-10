@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.logging.Logger;
 
 /**
  * This is the main class for the NametagEdit server plugin.
@@ -29,12 +30,29 @@ public class NametagEdit extends JavaPlugin {
 	 * @see #load()
 	 */
 	public void onEnable() {
+
+        final Logger log = getLogger();
+
         plugin = this;
         NametagUtils.clearOldTeams();
         NametagManager.load();
 		this.getServer().getPluginManager().registerEvents(new NametagEventHandler(), this);
 		getCommand("ne").setExecutor(new NametagCommand());
 		load();
+
+        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+           public void run() {
+               if (plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null) {
+                   plugin.getServer().getPluginManager().registerEvents(new NametagHookPEX(), plugin);
+                   log.info("Hooked into PermissionsEx!");
+               }
+               if (plugin.getServer().getPluginManager().getPlugin("GroupManager") != null) {
+                   plugin.getServer().getPluginManager().registerEvents(new NametagHookGM(), plugin);
+                   log.info("Hooked into GroupManager!");
+               }
+
+           }
+        });
 	}
     public void onDisable() {
         NametagManager.reset();

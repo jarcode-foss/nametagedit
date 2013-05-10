@@ -252,6 +252,8 @@ public class NametagAPI {
      */
     public static boolean hasCustomNametag(String player) {
         LinkedHashMap<String, String> map = PlayerLoader.getPlayer(player);
+        if (map == null)
+            return false;
         String prefix = map.get("prefix");
         String suffix = map.get("suffix");
         if ((prefix == null || prefix.isEmpty()) && (suffix == null || suffix.isEmpty()))
