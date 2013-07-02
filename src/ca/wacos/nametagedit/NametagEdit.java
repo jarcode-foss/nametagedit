@@ -34,7 +34,6 @@ public class NametagEdit extends JavaPlugin {
         final Logger log = getLogger();
 
         plugin = this;
-        NametagUtils.clearOldTeams();
         NametagManager.load();
 		this.getServer().getPluginManager().registerEvents(new NametagEventHandler(), this);
 		getCommand("ne").setExecutor(new NametagCommand());

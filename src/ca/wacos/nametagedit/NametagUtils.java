@@ -1,10 +1,8 @@
 package ca.wacos.nametagedit;
 
-import net.minecraft.server.v1_5_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -131,75 +129,6 @@ class NametagUtils {
 		return f1;
 	}
 	/**
-	 * Returns the {@link org.bukkit.Location} of an offline player by extracting it from his/her data file.
-	 *
-	 * @param s the player name
-	 * @return the {@link org.bukkit.Location} of the player
-	 */
-    // This method is no longer used by NametagEdit 1.6+
-	static Location getOfflineLoc(String s) {
-		File file = new File(Bukkit.getWorlds().get(0).getName() + "/players/" + s + ".dat");
-		if (!file.exists())
-			return null;
-		try {
-			NBTTagCompound compound = NBTCompressedStreamTools.a(new FileInputStream(file));
-
-			World w = Bukkit.getWorld(new UUID(compound.getLong("WorldUUIDMost"), compound.getLong("WorldUUIDLeast")));
-
-			NBTTagList list = compound.getList("Pos");
-			double x = ((NBTTagDouble)list.get(0)).data;
-			double y = ((NBTTagDouble)list.get(1)).data;
-			double z =((NBTTagDouble)list.get(2)).data;
-			list = compound.getList("Rotation");
-
-			float yaw = ((NBTTagFloat)list.get(0)).data;
-			float pitch = ((NBTTagFloat)list.get(1)).data;
-
-			if (GroupLoader.DEBUG)
-				System.out.println("Loaded location from player file: " + w.getName() + ", " + x + ", " + y + ", " + z + ", " + yaw + ", " + pitch);
-
-			Location loc = new Location(w, x, y, z, yaw, pitch);
-
-			return loc;
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	/**
-	 * Sets the {@link org.bukkit.Location} of an offline player by compressing it into his/her data file.
-	 *
-	 * @param s the player name
-	 * @param l the {@link org.bukkit.Location} of the player
-	 */
-    // This method is no longer used by NametagEdit 1.6+
-	static void setOfflineLoc(String s, Location l) {
-		File file = new File(Bukkit.getWorlds().get(0).getName() + "/players/" + s + ".dat");
-		if (!file.exists())
-			return;
-		try {
-			NBTTagCompound compound = NBTCompressedStreamTools.a(new FileInputStream(file));
-			
-			compound.set("Pos", new NBTTagList());
-			compound.getList("Pos").add(new NBTTagDouble("", l.getX()));
-			compound.getList("Pos").add(new NBTTagDouble("", l.getY()));
-			compound.getList("Pos").add(new NBTTagDouble("", l.getZ()));
-			
-		    compound.set("Rotation", new NBTTagList());
-		    compound.getList("Rotation").add(new NBTTagFloat("", l.getYaw()));
-		    compound.getList("Rotation").add(new NBTTagFloat("", l.getPitch()));
-			
-			compound.setLong("WorldUUIDLeast", l.getWorld().getUID().getLeastSignificantBits());
-			compound.setLong("WorldUUIDMost", l.getWorld().getUID().getMostSignificantBits());
-			
-			NBTCompressedStreamTools.a(compound, new FileOutputStream(file));
-		}
-		catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	/**
 	 * Compares a newer version {@link String} to an older one. If the newer version is more recent,
 	 * this this method returns true, and if not, this method will return false. If there is an
 	 * error parsing the version numbers, this method will return false.
@@ -273,12 +202,4 @@ class NametagUtils {
 			return true;
 		else return false;
 	}
-
-    /**
-     * Clears out any teams in the vanilla scoreboard object.
-     */
-    static void clearOldTeams() {
-        Scoreboard board = ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getScoreboard();
-        board.getTeams().clear();
-    }
 }
