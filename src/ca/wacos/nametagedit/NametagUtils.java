@@ -1,10 +1,10 @@
 package ca.wacos.nametagedit;
 
-import net.minecraft.server.v1_5_R3.*;
+import net.minecraft.server.v1_6_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R1.CraftWorld;
 
 import java.io.File;
 import java.io.FileInputStream;
