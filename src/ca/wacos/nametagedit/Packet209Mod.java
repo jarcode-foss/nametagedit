@@ -1,3 +1,7 @@
+/**
+* Provided By: sanjay900
+*/
+
 package ca.wacos.nametagedit;
 
 import java.lang.reflect.InvocationTargetException;
@@ -8,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import org.bukkit.Bukkit;
 
 /**
  * A small wrapper for the Packet209SetScoreboardTeam packet.
@@ -46,7 +51,6 @@ class Packet209Mod {
             throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, NoSuchFieldException, InvocationTargetException {
 
         packet = packetType.newInstance();
-
         setField("a", name);
         setField("f", paramInt);
 
@@ -83,12 +87,18 @@ class Packet209Mod {
     }
     private void setField(String field, Object value)
             throws NoSuchFieldException, IllegalAccessException {
-        packet.getClass().getField(field).set(packet, value);
+        Field f = packet.getClass().getDeclaredField(field);
+        f.setAccessible(true);
+        f.set(packet, value);
+        
+        
     }
     @SuppressWarnings("unchecked")
     private void addAll(Collection<?> col)
             throws NoSuchFieldException, IllegalAccessException {
-        ((Collection) packet.getClass().getField("e").get(packet)).addAll(col);
+        Field f = packet.getClass().getDeclaredField("e");
+        f.setAccessible(true);
+        ((Collection) f.get(packet)).addAll(col);
     }
     private static String getCraftPlayerClasspath() {
         return "org.bukkit.craftbukkit." + PackageChecker.getVersion() + ".entity.CraftPlayer";
@@ -103,6 +113,6 @@ class Packet209Mod {
         return "net.minecraft.server." + PackageChecker.getVersion() + ".Packet";
     }
     private static String getPacketTeamClasspath() {
-        return "net.minecraft.server." + PackageChecker.getVersion() + ".Packet209SetScoreboardTeam";
+        return "net.minecraft.server." + PackageChecker.getVersion() + ".PacketPlayOutScoreboardTeam";
     }
 }
